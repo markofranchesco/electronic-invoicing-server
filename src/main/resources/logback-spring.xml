@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <springProperty scope="context" name="TRACE_METHOD_LEVEL" source="app.observability.method-level"
+                  defaultValue="INFO"/>
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder class="org.springframework.boot.logging.logback.StructuredLogEncoder">
+      <format>logstash</format>
+      <charset>UTF-8</charset>
+    </encoder>
+  </appender>
+  <!-- DEBUG activa una entrada/salida conjunta por llamada interna. -->
+  <logger name="pe.invoicing.app.config.observability.ApplicationTrace.methods" level="${TRACE_METHOD_LEVEL}"/>
+  <root level="INFO">
+    <appender-ref ref="CONSOLE"/>
+  </root>
+</configuration>

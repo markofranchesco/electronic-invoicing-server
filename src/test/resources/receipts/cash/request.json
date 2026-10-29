@@ -1,0 +1,21 @@
+{
+  "documentType": "03",
+  "series": "B001",
+  "issueDate": "2026-10-26",
+  "currency": "PEN",
+  "customer": {
+    "documentType": "1",
+    "documentNumber": "45678901",
+    "name": "Ana Torres Díaz"
+  },
+  "items": [
+    {
+      "description": "Cuaderno ejecutivo A5",
+      "unitCode": "NIU",
+      "quantity": "2",
+      "unitPrice": "11.80",
+      "taxAffectationCode": "10"
+    }
+  ],
+  "operationType": "0101"
+}

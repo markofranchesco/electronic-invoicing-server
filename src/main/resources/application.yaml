@@ -1,0 +1,48 @@
+spring:
+  application:
+    name: ${APP_NAME:electronic-invoicing}
+  profiles:
+    default: ${SPRING_PROFILES_DEFAULT:development}
+  mvc:
+    problemdetails:
+      enabled: ${SPRING_MVC_PROBLEMDETAILS_ENABLED:true}
+  jackson:
+    default-property-inclusion: ${SPRING_JACKSON_DEFAULT_PROPERTY_INCLUSION:non_null}
+    deserialization:
+      fail-on-unknown-properties: ${SPRING_JACKSON_DESERIALIZATION_FAIL_ON_UNKNOWN_PROPERTIES:true}
+  jpa:
+    open-in-view: false
+app:
+  receipt:
+    public-base-url: ${PUBLIC_BASE_URL:}
+  sales:
+    wait-timeout-ms: ${SALES_WAIT_TIMEOUT_MS:10000}
+  security:
+    routes:
+      public-paths:
+        - /sign-up
+        - /sign-in
+  observability:
+    method-level: ${OBSERVABILITY_METHOD_LEVEL:INFO}
+    limits:
+      max-body-bytes: ${OBSERVABILITY_HTTP_MAX_BODY_BYTES:8192}
+      max-log-chars: ${OBSERVABILITY_HTTP_MAX_LOG_CHARS:4096}
+    masking:
+      replacement: '***'
+      rules:
+        - fields:
+            - password
+            - authorization
+            - accessToken
+          mode: FULL
+        - fields:
+            - phone
+            - documentNumber
+          mode: PARTIAL
+          keep-prefix: 0
+          keep-suffix: 4
+        - fields:
+            - email
+          mode: REGEX
+          pattern: ^([^@])[^@]*(@.+)$
+          replacement: $1***$2

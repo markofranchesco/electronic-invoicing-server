@@ -1,0 +1,22 @@
+{
+  "documentType": "01",
+  "series": "F001",
+  "issueDate": "2026-10-26",
+  "currency": "PEN",
+  "customer": {
+    "documentType": "6",
+    "documentNumber": "20123456786",
+    "name": "COMERCIAL ANDINA DEMO S.A.C."
+  },
+  "items": [
+    {
+      "description": "Cuaderno ejecutivo A5",
+      "unitCode": "NIU",
+      "quantity": "1",
+      "unitPrice": "118.00",
+      "taxAffectationCode": "10"
+    }
+  ],
+  "paymentType": "Contado",
+  "operationType": "0101"
+}

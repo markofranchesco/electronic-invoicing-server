@@ -1,0 +1,26 @@
+# Maven y IDE
+/target/
+.idea/workspace.xml
+.idea/shelf/
+.idea/httpRequests/
+.vscode/
+*.iml
+.classpath
+.project
+.settings/
+# Datos locales y secretos
+*.mv.db
+*.trace.db
+.env
+.env.*
+*.p12
+*.pfx
+*.key
+*.jks
+*.pem
+*.log
+# SO
+.DS_Store
+Thumbs.db
+
+/data/

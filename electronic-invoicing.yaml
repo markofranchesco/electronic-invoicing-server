@@ -1,0 +1,3962 @@
+openapi: 3.1.0
+info:
+  title: Fábrica Abstracta S.A.C.S. — Facturación electrónica
+  version: 2.2.0
+  description: 'API por cuenta autenticada. Emisión y bajas durables: 202 significa solicitud reservada, no aceptación
+    SUNAT. Consultar emissionStatus, communicationStatus y cancellationStatus. PEN/USD/EUR; factura y boleta nacionales,
+    notas de crédito 01/02/03/04/05/06/07/09/13, débito 01/02. Las empresas se aíslan por accountId del token; el
+    RUC puede repetirse entre cuentas. Sin límite comercial de empresas o establecimientos. Validación fiscal local
+    y XSD no sustituyen la CDR real.'
+  x-sunat-rules: https://cpe.sunat.gob.pe/guias-y-manuales
+servers:
+- url: http://localhost:8080
+security:
+- bearerAuth: []
+tags:
+- name: Autenticación
+- name: Sesiones
+- name: Empresas
+- name: Comprobantes
+- name: Anulación
+- name: Notas de crédito
+- name: Notas de débito
+- name: Cobranzas
+- name: Ventas V2
+paths:
+  /sign-up:
+    post:
+      operationId: signup
+      tags:
+      - Autenticación
+      summary: Crear cuenta
+      responses:
+        '200':
+          description: Cuenta creada correctamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '400':
+          description: Entrada inválida.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '401':
+          description: Token ausente o inválido.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Recurso no encontrado en la cuenta.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '409':
+          description: Estado incompatible o conflicto de versión/idempotencia.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '422':
+          description: Regla de negocio o fiscal no satisfecha.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '502':
+          description: Respuesta externa inválida o indisponible.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignUpRequest'
+      security: []
+  /sign-in:
+    post:
+      operationId: signin
+      tags:
+      - Autenticación
+      summary: Iniciar sesión
+      responses:
+        '200':
+          description: Sesión iniciada correctamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '400':
+          description: Entrada inválida.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '401':
+          description: Token ausente o inválido.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Recurso no encontrado en la cuenta.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '409':
+          description: Estado incompatible o conflicto de versión/idempotencia.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '422':
+          description: Regla de negocio o fiscal no satisfecha.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '502':
+          description: Respuesta externa inválida o indisponible.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignInRequest'
+      security: []
+  /sign-out:
+    post:
+      operationId: signOut
+      tags:
+      - Autenticación
+      summary: Cerrar sesión
+      responses:
+        '200':
+          description: Sesión cerrada correctamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '400':
+          description: Entrada inválida.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '401':
+          description: Token ausente o inválido.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Recurso no encontrado en la cuenta.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '409':
+          description: Estado incompatible o conflicto de versión/idempotencia.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '422':
+          description: Regla de negocio o fiscal no satisfecha.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '502':
+          description: Respuesta externa inválida o indisponible.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+  /sessions:
+    get:
+      operationId: listSessions
+      tags:
+      - Sesiones
+      summary: Listar sesiones
+      responses:
+        '200':
+          description: Operación procesada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SessionPage'
+        '400':
+          description: Entrada inválida.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '401':
+          description: Token ausente o inválido.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Recurso no encontrado en la cuenta.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '409':
+          description: Estado incompatible o conflicto de versión/idempotencia.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '422':
+          description: Regla de negocio o fiscal no satisfecha.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '502':
+          description: Respuesta externa inválida o indisponible.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+      - name: perPage
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 10
+  /sessions/{sessionId}:
+    delete:
+      operationId: revokeSession
+      tags:
+      - Sesiones
+      summary: Revocar sesión
+      responses:
+        '200':
+          description: Sesión revocada correctamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '400':
+          description: Entrada inválida.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '401':
+          description: Token ausente o inválido.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Recurso no encontrado en la cuenta.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '409':
+          description: Estado incompatible o conflicto de versión/idempotencia.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '422':
+          description: Regla de negocio o fiscal no satisfecha.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '502':
+          description: Respuesta externa inválida o indisponible.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+      parameters:
+      - name: sessionId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+  /companies:
+    get:
+      operationId: listCompanies
+      tags:
+      - Empresas
+      summary: Listar empresas
+      responses:
+        '200':
+          description: Operación procesada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanyPage'
+        '400':
+          description: Entrada inválida.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '401':
+          description: Token ausente o inválido.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Recurso no encontrado en la cuenta.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '409':
+          description: Estado incompatible o conflicto de versión/idempotencia.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '422':
+          description: Regla de negocio o fiscal no satisfecha.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '502':
+          description: Respuesta externa inválida o indisponible.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+      - name: perPage
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 10
+  /companies/{documentNumber}:
+    get:
+      operationId: getCompany
+      tags:
+      - Empresas
+      summary: Obtener empresa
+      responses:
+        '200':
+          description: Operación procesada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanyResponse'
+        '400':
+          description: Entrada inválida.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '401':
+          description: Token ausente o inválido.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Recurso no encontrado en la cuenta.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '409':
+          description: Estado incompatible o conflicto de versión/idempotencia.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '422':
+          description: Regla de negocio o fiscal no satisfecha.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '502':
+          description: Respuesta externa inválida o indisponible.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+      parameters:
+      - name: documentNumber
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: ^[0-9]{11}$
+        description: Número de documento de la empresa.
+    put:
+      operationId: upsertCompany
+      tags:
+      - Empresas
+      summary: Crear o actualizar empresa
+      responses:
+        '200':
+          description: Empresa guardada correctamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '422':
+          description: Ubigeo inexistente o inconsistencias entre ubigeo y departamento, provincia o distrito.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '400':
+          description: Entrada inválida.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '401':
+          description: Token ausente o inválido.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Recurso no encontrado en la cuenta.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '409':
+          description: Estado incompatible o conflicto de versión/idempotencia.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '502':
+          description: Respuesta externa inválida o indisponible.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+      parameters:
+      - name: documentNumber
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: ^[0-9]{11}$
+        description: Número de documento de la empresa.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompanyUpsertRequest'
+    delete:
+      operationId: deleteCompany
+      tags:
+      - Empresas
+      summary: Eliminar empresa
+      responses:
+        '200':
+          description: Empresa eliminada correctamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '400':
+          description: Entrada inválida.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '401':
+          description: Token ausente o inválido.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Recurso no encontrado en la cuenta.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '409':
+          description: Estado incompatible o conflicto de versión/idempotencia.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '422':
+          description: Regla de negocio o fiscal no satisfecha.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '502':
+          description: Respuesta externa inválida o indisponible.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+      parameters:
+      - name: documentNumber
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: ^[0-9]{11}$
+        description: Número de documento de la empresa.
+  /companies/{documentNumber}/documents:
+    get:
+      operationId: listDocuments
+      tags:
+      - Comprobantes
+      summary: Listar comprobantes
+      responses:
+        '200':
+          description: Operación procesada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentPage'
+        '400':
+          description: Entrada inválida.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '401':
+          description: Token ausente o inválido.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Recurso no encontrado en la cuenta.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '409':
+          description: Estado incompatible o conflicto de versión/idempotencia.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '422':
+          description: Regla de negocio o fiscal no satisfecha.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '502':
+          description: Respuesta externa inválida o indisponible.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+      parameters:
+      - name: documentNumber
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: ^[0-9]{11}$
+        description: Número de documento de la empresa.
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+      - name: perPage
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 10
+      - name: documentType
+        in: query
+        required: false
+        schema:
+          $ref: '#/components/schemas/DocumentType'
+      - name: status
+        in: query
+        required: false
+        schema:
+          $ref: '#/components/schemas/DocumentStatus'
+      - name: from
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+      - name: to
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+      - name: series
+        in: query
+        required: false
+        schema:
+          type: string
+          pattern: ^[A-Z0-9]{4}$
+      - name: number
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int64
+          minimum: 1
+          maximum: 99999999
+      - name: externalReference
+        in: query
+        required: false
+        schema:
+          type: string
+  /companies/{documentNumber}/documents/issue:
+    post:
+      operationId: issueDocument
+      tags:
+      - Comprobantes
+      summary: Emitir factura o boleta
+      responses:
+        '202':
+          description: Solicitud registrada. Use documentId para consultar el estado; no confirma aceptación tributaria.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AsyncOperationResponse'
+        '400':
+          description: Solicitud mal formada o incompatible con el esquema.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '409':
+          description: Incompatibilidad de estado o idempotencia.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '422':
+          description: Validación fiscal o de negocio fallida.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '401':
+          description: Token ausente o inválido.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Recurso no encontrado en la cuenta.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '502':
+          description: Respuesta externa inválida o indisponible.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+      parameters:
+      - name: documentNumber
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: ^[0-9]{11}$
+        description: Número de documento de la empresa.
+      - name: Idempotency-Key
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 8
+          maxLength: 200
+        description: Reutiliza la misma clave al reintentar la misma emisión; no uses una clave nueva ante un resultado
+          incierto.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentUpsertRequest'
+  /companies/{documentNumber}/documents/{documentId}:
+    get:
+      operationId: getDocument
+      tags:
+      - Comprobantes
+      summary: Obtener comprobante
+      responses:
+        '200':
+          description: Operación procesada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentApiResponse'
+        '400':
+          description: Entrada inválida.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '401':
+          description: Token ausente o inválido.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Recurso no encontrado en la cuenta.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '409':
+          description: Estado incompatible o conflicto de versión/idempotencia.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '422':
+          description: Regla de negocio o fiscal no satisfecha.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '502':
+          description: Respuesta externa inválida o indisponible.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+      parameters:
+      - name: documentNumber
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: ^[0-9]{11}$
+        description: Número de documento de la empresa.
+      - name: documentId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+  /companies/{documentNumber}/documents/{documentId}/receipt:
+    get:
+      operationId: downloadPdf
+      tags:
+      - Comprobantes
+      summary: Descargar comprobante en PDF
+      responses:
+        '200':
+          description: 'HTTP 200, Content-Type: application/pdf. Archivo binario PDF; no es un cuerpo JSON.'
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Entrada inválida.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '401':
+          description: Token ausente o inválido.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Recurso no encontrado en la cuenta.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '409':
+          description: Estado incompatible o conflicto de versión/idempotencia.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '422':
+          description: Regla de negocio o fiscal no satisfecha.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '502':
+          description: Respuesta externa inválida o indisponible.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+      parameters:
+      - name: documentNumber
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: ^[0-9]{11}$
+        description: Número de documento de la empresa.
+      - name: documentId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: format
+        in: query
+        required: false
+        schema:
+          $ref: '#/components/schemas/PdfFormat'
+  /companies/{documentNumber}/documents/{documentId}/cancel:
+    post:
+      operationId: cancelDocument
+      tags:
+      - Anulación
+      summary: Comunicar baja de comprobante no otorgado
+      responses:
+        '202':
+          description: Solicitud registrada. Use documentId para consultar el estado; no confirma aceptación tributaria.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AsyncOperationResponse'
+        '400':
+          description: Solicitud mal formada o incompatible con el esquema.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '409':
+          description: Incompatibilidad de estado o idempotencia.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '422':
+          description: Validación fiscal o de negocio fallida.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '401':
+          description: Token ausente o inválido.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Recurso no encontrado en la cuenta.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '502':
+          description: Respuesta externa inválida o indisponible.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+      parameters:
+      - name: documentNumber
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: ^[0-9]{11}$
+        description: Número de documento de la empresa.
+      - name: documentId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CancellationRequest'
+  /companies/{documentNumber}/documents/{documentId}/cancellation:
+    get:
+      operationId: getCancellation
+      tags:
+      - Anulación
+      summary: Consultar anulación
+      responses:
+        '200':
+          description: Operación procesada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CancellationApiResponse'
+        '400':
+          description: Entrada inválida.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '401':
+          description: Token ausente o inválido.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Recurso no encontrado en la cuenta.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '409':
+          description: Estado incompatible o conflicto de versión/idempotencia.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '422':
+          description: Regla de negocio o fiscal no satisfecha.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '502':
+          description: Respuesta externa inválida o indisponible.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+      parameters:
+      - name: documentNumber
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: ^[0-9]{11}$
+        description: Número de documento de la empresa.
+      - name: documentId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+  /companies/{documentNumber}/documents/{documentId}/credit-notes:
+    post:
+      tags:
+      - Notas de crédito
+      summary: Reservar nota de crédito
+      operationId: post_companies_documentNumber_documents_documentId_credit_notes
+      parameters:
+      - name: documentNumber
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: documentId
+        in: path
+        required: true
+        schema:
+          type:
+          - string
+          - 'null'
+          format: uuid
+      - name: Idempotency-Key
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 8
+          maxLength: 200
+        description: 'Clave estable por intención; misma clave y cuerpo reutiliza el resultado. Otra carga con la
+          misma clave: 409.'
+      responses:
+        '202':
+          description: Resultado de la operación.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AsyncOperationResponse'
+        '400':
+          description: Entrada inválida.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '401':
+          description: Token ausente o inválido.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Recurso no encontrado en la cuenta.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '409':
+          description: Estado incompatible o conflicto de versión/idempotencia.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '422':
+          description: Regla de negocio o fiscal no satisfecha.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '502':
+          description: Respuesta externa inválida o indisponible.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreditNoteIssueRequest'
+  /companies/{documentNumber}/documents/{documentId}/recover:
+    post:
+      summary: Recuperar emisión incierta
+      parameters:
+      - name: documentNumber
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: ^[0-9]{11}$
+        description: Número de documento de la empresa.
+      - name: documentId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Estado actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentApiResponse'
+        '409':
+          description: Estado incompatible o ticket sin CDR correlacionable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '422':
+          description: Fuera del plazo permitido
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '400':
+          description: Entrada inválida.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '401':
+          description: Token ausente o inválido.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Recurso no encontrado en la cuenta.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '502':
+          description: Respuesta externa inválida o indisponible.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ticket:
+                  type:
+                  - string
+                  - 'null'
+                  pattern: ^[A-Za-z0-9-]{1,100}$
+              additionalProperties: false
+  /companies/{documentNumber}/documents/{documentId}/summary:
+    post:
+      summary: Reportar nuevo RC del comprobante firmado
+      parameters:
+      - name: documentNumber
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: ^[0-9]{11}$
+        description: Número de documento de la empresa.
+      - name: documentId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Estado actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentApiResponse'
+        '409':
+          description: Estado incompatible o ticket sin CDR correlacionable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '422':
+          description: Fuera del plazo permitido
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '400':
+          description: Entrada inválida.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '401':
+          description: Token ausente o inválido.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Recurso no encontrado en la cuenta.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '502':
+          description: Respuesta externa inválida o indisponible.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                previousReference:
+                  type: string
+                  pattern: ^RC-[0-9]{8}-[0-9]{1,5}$
+              additionalProperties: false
+              required:
+              - previousReference
+  /companies/{documentNumber}/documents/{documentId}/grant:
+    post:
+      summary: Registrar puesta a disposición
+      parameters:
+      - name: documentNumber
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: ^[0-9]{11}$
+        description: Número de documento de la empresa.
+      - name: documentId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Estado actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentApiResponse'
+        '409':
+          description: Estado incompatible o ticket sin CDR correlacionable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '422':
+          description: Fuera del plazo permitido
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '400':
+          description: Entrada inválida.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '401':
+          description: Token ausente o inválido.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Recurso no encontrado en la cuenta.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '502':
+          description: Respuesta externa inválida o indisponible.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+  /companies/{documentNumber}/documents/{documentId}/cancellation/recover:
+    post:
+      summary: Recuperar baja incierta
+      parameters:
+      - name: documentNumber
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: ^[0-9]{11}$
+        description: Número de documento de la empresa.
+      - name: documentId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Estado actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CancellationApiResponse'
+        '409':
+          description: Estado incompatible o ticket sin CDR correlacionable
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '422':
+          description: Fuera del plazo permitido
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '400':
+          description: Entrada inválida.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '401':
+          description: Token ausente o inválido.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Recurso no encontrado en la cuenta.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '502':
+          description: Respuesta externa inválida o indisponible.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ticket:
+                  type:
+                  - string
+                  - 'null'
+                  pattern: ^[A-Za-z0-9-]{1,100}$
+              additionalProperties: false
+  /companies/{documentNumber}/documents/{documentId}/files/{type}:
+    get:
+      summary: Descargar XML firmado o ZIP CDR original
+      parameters:
+      - name: documentNumber
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: ^[0-9]{11}$
+        description: Número de documento de la empresa.
+      - name: documentId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: type
+        in: path
+        required: true
+        schema:
+          type: string
+          enum:
+          - XML
+          - CDR
+          - SUMMARY_XML
+          - SUMMARY_CDR
+          - CANCELLATION_XML
+          - CANCELLATION_CDR
+      responses:
+        '200':
+          description: Archivo original; Content-Disposition attachment con nombre SUNAT
+          content:
+            application/xml:
+              schema:
+                type: string
+                format: binary
+            application/zip:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: Archivo aún no disponible
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '400':
+          description: Entrada inválida.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '401':
+          description: Token ausente o inválido.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '409':
+          description: Estado incompatible o conflicto de versión/idempotencia.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '422':
+          description: Regla de negocio o fiscal no satisfecha.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '502':
+          description: Respuesta externa inválida o indisponible.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+  /companies/{documentNumber}/documents/{documentId}/publication:
+    post:
+      tags:
+      - Comprobantes
+      summary: Publicar consulta del comprobante
+      operationId: post_companies_documentNumber_documents_documentId_publication
+      parameters:
+      - name: documentNumber
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: documentId
+        in: path
+        required: true
+        schema:
+          type:
+          - string
+          - 'null'
+          format: uuid
+      responses:
+        '200':
+          description: Resultado de la operación.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Publication'
+        '400':
+          description: Entrada inválida.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '401':
+          description: Token ausente o inválido.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Recurso no encontrado en la cuenta.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '409':
+          description: Estado incompatible o conflicto de versión/idempotencia.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '422':
+          description: Regla de negocio o fiscal no satisfecha.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '502':
+          description: Respuesta externa inválida o indisponible.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+  /companies/{documentNumber}/documents/{documentId}/reconciliation/resume:
+    post:
+      tags:
+      - Comprobantes
+      summary: Reanudar conciliación tras resolver revisión manual
+      operationId: post_companies_documentNumber_documents_documentId_reconciliation_resume
+      parameters:
+      - name: documentNumber
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: documentId
+        in: path
+        required: true
+        schema:
+          type:
+          - string
+          - 'null'
+          format: uuid
+      responses:
+        '200':
+          description: Operación completada.
+        '400':
+          description: Entrada inválida.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '401':
+          description: Token ausente o inválido.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Recurso no encontrado en la cuenta.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '409':
+          description: Estado incompatible o conflicto de versión/idempotencia.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '422':
+          description: Regla de negocio o fiscal no satisfecha.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '502':
+          description: Respuesta externa inválida o indisponible.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+  /companies/{documentNumber}/documents/{documentId}/communications:
+    get:
+      tags:
+      - Comprobantes
+      summary: Consultar comunicaciones
+      operationId: get_companies_documentNumber_documents_documentId_communications
+      parameters:
+      - name: documentNumber
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: documentId
+        in: path
+        required: true
+        schema:
+          type:
+          - string
+          - 'null'
+          format: uuid
+      responses:
+        '200':
+          description: Operación completada.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CommunicationRecord'
+        '400':
+          description: Entrada inválida.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '401':
+          description: Token ausente o inválido.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Recurso no encontrado en la cuenta.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '409':
+          description: Estado incompatible o conflicto de versión/idempotencia.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '422':
+          description: Regla de negocio o fiscal no satisfecha.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '502':
+          description: Respuesta externa inválida o indisponible.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+  /companies/{documentNumber}/documents/{documentId}/communications/{reference}/files/{type}:
+    get:
+      summary: Descargar archivo de una referencia histórica
+      parameters:
+      - name: documentNumber
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: ^[0-9]{11}$
+        description: Número de documento de la empresa.
+      - name: documentId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - in: path
+        name: reference
+        required: true
+        schema:
+          type: string
+          pattern: ^(RA|RC)-[0-9]{8}-[0-9]{1,5}$
+      - in: path
+        name: type
+        required: true
+        schema:
+          type: string
+          enum:
+          - SUMMARY_XML
+          - CDR
+          - CANCELLATION_XML
+          - CANCELLATION_CDR
+      responses:
+        '200':
+          description: XML o ZIP original
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: Archivo no disponible
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '400':
+          description: Entrada inválida.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '401':
+          description: Token ausente o inválido.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '409':
+          description: Estado incompatible o conflicto de versión/idempotencia.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '422':
+          description: Regla de negocio o fiscal no satisfecha.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '502':
+          description: Respuesta externa inválida o indisponible.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+  /public/documents/{key}:
+    get:
+      summary: Consulta del adquirente mediante clave de publicación
+      security: []
+      parameters:
+      - in: path
+        name: key
+        required: true
+        schema:
+          type: string
+          pattern: ^[a-f0-9]{32}$
+      responses:
+        '200':
+          description: Página del comprobante
+          content:
+            text/html:
+              schema:
+                type: string
+        '404':
+          description: Publicación no encontrada
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '400':
+          description: Entrada inválida.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '401':
+          description: Token ausente o inválido.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '409':
+          description: Estado incompatible o conflicto de versión/idempotencia.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '422':
+          description: Regla de negocio o fiscal no satisfecha.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '502':
+          description: Respuesta externa inválida o indisponible.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+  /public/documents/{key}/{type}:
+    get:
+      summary: Descargar archivo publicado
+      security: []
+      parameters:
+      - in: path
+        name: key
+        required: true
+        schema:
+          type: string
+          pattern: ^[a-f0-9]{32}$
+      - in: path
+        name: type
+        required: true
+        schema:
+          type: string
+          enum:
+          - XML
+          - CDR
+          - PDF
+      responses:
+        '200':
+          description: Archivo original o representación PDF
+        '404':
+          description: Publicación o archivo no disponible
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '400':
+          description: Entrada inválida.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '401':
+          description: Token ausente o inválido.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '409':
+          description: Estado incompatible o conflicto de versión/idempotencia.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '422':
+          description: Regla de negocio o fiscal no satisfecha.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '502':
+          description: Respuesta externa inválida o indisponible.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+  /companies/{documentNumber}/documents/{documentId}/debit-notes:
+    post:
+      tags:
+      - Notas de débito
+      summary: Reservar nota de débito
+      operationId: post_companies_documentNumber_documents_documentId_debit_notes
+      parameters:
+      - name: documentNumber
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: documentId
+        in: path
+        required: true
+        schema:
+          type:
+          - string
+          - 'null'
+          format: uuid
+      - name: Idempotency-Key
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 8
+          maxLength: 200
+        description: 'Clave estable por intención; misma clave y cuerpo reutiliza el resultado. Otra carga con la
+          misma clave: 409.'
+      responses:
+        '202':
+          description: Resultado de la operación.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AsyncOperationResponse'
+        '400':
+          description: Entrada inválida.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '401':
+          description: Token ausente o inválido.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Recurso no encontrado en la cuenta.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '409':
+          description: Estado incompatible o conflicto de versión/idempotencia.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '422':
+          description: Regla de negocio o fiscal no satisfecha.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '502':
+          description: Respuesta externa inválida o indisponible.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DebitNoteDraft'
+  /companies/{documentNumber}/documents/{documentId}/payments:
+    get:
+      tags:
+      - Cobranzas
+      summary: Consultar saldo comercial
+      operationId: get_companies_documentNumber_documents_documentId_payments
+      parameters:
+      - name: documentNumber
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: documentId
+        in: path
+        required: true
+        schema:
+          type:
+          - string
+          - 'null'
+          format: uuid
+      responses:
+        '200':
+          description: Resultado de la operación.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionBalance'
+        '400':
+          description: Entrada inválida.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '401':
+          description: Token ausente o inválido.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Recurso no encontrado en la cuenta.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '409':
+          description: Estado incompatible o conflicto de versión/idempotencia.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '422':
+          description: Regla de negocio o fiscal no satisfecha.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '502':
+          description: Respuesta externa inválida o indisponible.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+    post:
+      tags:
+      - Cobranzas
+      summary: Registrar abono
+      operationId: post_companies_documentNumber_documents_documentId_payments
+      parameters:
+      - name: documentNumber
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: documentId
+        in: path
+        required: true
+        schema:
+          type:
+          - string
+          - 'null'
+          format: uuid
+      - name: Idempotency-Key
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 8
+          maxLength: 200
+        description: 'Clave estable por intención; misma clave y cuerpo reutiliza el resultado. Otra carga con la
+          misma clave: 409.'
+      responses:
+        '200':
+          description: Resultado de la operación.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionEntry'
+        '400':
+          description: Entrada inválida.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '401':
+          description: Token ausente o inválido.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Recurso no encontrado en la cuenta.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '409':
+          description: Estado incompatible o conflicto de versión/idempotencia.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '422':
+          description: Regla de negocio o fiscal no satisfecha.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '502':
+          description: Respuesta externa inválida o indisponible.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CollectionRequest'
+  /companies/{documentNumber}/documents/{documentId}/payments/{paymentId}/reverse:
+    post:
+      tags:
+      - Cobranzas
+      summary: Revertir abono
+      operationId: post_companies_documentNumber_documents_documentId_payments_paymentId_reverse
+      parameters:
+      - name: documentNumber
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: documentId
+        in: path
+        required: true
+        schema:
+          type:
+          - string
+          - 'null'
+          format: uuid
+      - name: paymentId
+        in: path
+        required: true
+        schema:
+          type:
+          - string
+          - 'null'
+          format: uuid
+      responses:
+        '200':
+          description: Resultado de la operación.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionEntry'
+        '400':
+          description: Entrada inválida.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '401':
+          description: Token ausente o inválido.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '404':
+          description: Recurso no encontrado en la cuenta.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '409':
+          description: Estado incompatible o conflicto de versión/idempotencia.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '422':
+          description: Regla de negocio o fiscal no satisfecha.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '502':
+          description: Respuesta externa inválida o indisponible.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReversalRequest'
+  /v2/companies/{documentNumber}/sales:
+    post:
+      tags:
+      - Ventas V2
+      operationId: saveSaleV2
+      summary: Registrar venta, emitir y obtener PDF
+      description: 'Venta directa: no requiere confirmación ni send. Persiste la intención y orquesta emisión y
+        PDF. Espera hasta SALES_WAIT_TIMEOUT_MS (10000 por defecto) por el trabajo externo. 200 devuelve PDF; 202
+        informa demora con ID y recoveryUrl. Nunca crea otra venta por agotarse la espera. No enviar send:false.'
+      parameters:
+      - name: documentNumber
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: ^[0-9]{11}$
+      - name: format
+        in: query
+        schema:
+          type: string
+          enum:
+          - A4
+          - TICKET_48
+          - TICKET_50
+          - TICKET_54
+          - TICKET_55
+          - TICKET_58
+          - TICKET_80
+          default: TICKET_80
+      - name: Idempotency-Key
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 8
+          maxLength: 200
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SaleRequest'
+      responses:
+        '200':
+          description: 'PDF listo para imprimir. No equivale a aceptación SUNAT: comprobar X-Emission-Status y estado
+            impreso. Incluye X-Document-Id y Location.'
+          headers:
+            X-Document-Id:
+              schema:
+                type: string
+                format: uuid
+            X-Emission-Status:
+              schema:
+                type: string
+            Location:
+              schema:
+                type: string
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '202':
+          description: Emisión demorada. Devuelve mensaje, documentId, recoveryUrl y estado interno; la venta no
+            se cancela.
+          headers:
+            Location:
+              schema:
+                type: string
+            Retry-After:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SaleOperationResponse'
+        '409':
+          description: 'Rechazo, anulación o revisión manual: se devuelve el estado del documento. Conflictos de
+            idempotencia/estado pueden devolver problem+json.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SaleOperationResponse'
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '400':
+          description: Entrada inválida.
+        '401':
+          description: Autenticación requerida.
+        '404':
+          description: Venta o empresa no encontrada en la cuenta.
+        '422':
+          description: Regla fiscal o de negocio inválida.
+  /v2/companies/{documentNumber}/sales/{id}:
+    get:
+      tags:
+      - Ventas V2
+      operationId: getSaleV2
+      summary: Consultar estado local sin esperar a SUNAT
+      parameters:
+      - name: documentNumber
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: ^[0-9]{11}$
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: Estado persistido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentApiResponse'
+        '401':
+          description: Autenticación requerida.
+        '404':
+          description: No encontrada en la cuenta.
+  /v2/companies/{documentNumber}/sales/{id}/recover:
+    post:
+      tags:
+      - Ventas V2
+      operationId: recoverSaleV2
+      summary: Recuperar emisión demorada o fallida sin duplicar venta
+      description: 'Solo para excepción: conserva ID, correlativo y XML. No es una confirmación ordinaria. Tras
+        un 202 puede recuperar el PDF aquí o reimprimir cuando esté disponible.'
+      parameters:
+      - name: documentNumber
+        in: path
+        required: true
+        schema:
+          type: string
+          pattern: ^[0-9]{11}$
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: format
+        in: query
+        schema:
+          type: string
+          enum:
+          - A4
+          - TICKET_48
+          - TICKET_50
+          - TICKET_54
+          - TICKET_55
+          - TICKET_58
+          - TICKET_80
+          default: TICKET_80
+      responses:
+        '200':
+          description: 'PDF listo para imprimir. No equivale a aceptación SUNAT: comprobar X-Emission-Status y estado
+            impreso. Incluye X-Document-Id y Location.'
+          headers:
+            X-Document-Id:
+              schema:
+                type: string
+                format: uuid
+            X-Emission-Status:
+              schema:
+                type: string
+            Location:
+              schema:
+                type: string
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '202':
+          description: Emisión demorada. Devuelve mensaje, documentId, recoveryUrl y estado interno; la venta no
+            se cancela.
+          headers:
+            Location:
+              schema:
+                type: string
+            Retry-After:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SaleOperationResponse'
+        '409':
+          description: 'Rechazo, anulación o revisión manual: se devuelve el estado del documento. Conflictos de
+            idempotencia/estado pueden devolver problem+json.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SaleOperationResponse'
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+        '400':
+          description: Entrada inválida.
+        '401':
+          description: Autenticación requerida.
+        '404':
+          description: Venta o empresa no encontrada en la cuenta.
+        '422':
+          description: Regla fiscal o de negocio inválida.
+  /public/documents/{key}/status:
+    get:
+      operationId: getPublicDocumentStatus
+      tags:
+      - Comprobantes
+      summary: Consultar información del comprobante mediante su clave pública
+      security: []
+      parameters:
+      - in: path
+        name: key
+        required: true
+        schema:
+          type: string
+          pattern: ^[a-f0-9]{32}$
+      responses:
+        '200':
+          description: Datos persistidos y resultado fiscal disponible; no consulta SUNAT ni reemite.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicStatus'
+        '404':
+          description: Clave desconocida o inválida.
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Token opaco de sesión; no es un JWT.
+  schemas:
+    SignUpRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        email:
+          type: string
+          maxLength: 254
+          minLength: 1
+          format: email
+        password:
+          type: string
+          minLength: 12
+          maxLength: 128
+          writeOnly: true
+      required:
+      - email
+      - password
+    SignInRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        email:
+          type: string
+          maxLength: 254
+          minLength: 1
+          format: email
+        password:
+          type: string
+          minLength: 12
+          maxLength: 128
+          writeOnly: true
+      required:
+      - email
+      - password
+    CompanyUpsertRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        specialIgvFrom:
+          type: string
+          format: date
+          description: Inicio de elegibilidad verificada por el contribuyente para la Ley 31556; requiere specialIgvUntil.
+        specialIgvUntil:
+          type: string
+          format: date
+          description: Fin inclusivo de elegibilidad. No sustituye verificar requisitos ni padrón SUNAT.
+        legalName:
+          type: string
+          maxLength: 250
+          minLength: 1
+        tradeName:
+          type: string
+          maxLength: 255
+        email:
+          type: string
+          maxLength: 254
+          minLength: 1
+          format: email
+        address:
+          $ref: '#/components/schemas/Address'
+        taxpayerType:
+          $ref: '#/components/schemas/TaxpayerType'
+        taxCredentials:
+          $ref: '#/components/schemas/TaxCredentials'
+        digitalCertificate:
+          $ref: '#/components/schemas/DigitalCertificate'
+        logoBase64:
+          type:
+          - string
+          - 'null'
+          maxLength: 699052
+          description: Logo opcional de esta empresa. PNG/JPEG Base64 puro, hasta 512 KiB y 2048 x 2048 píxeles.
+            Null o vacío elimina el logo.
+      required:
+      - taxpayerType
+      - legalName
+      - email
+      - address
+      - taxCredentials
+      - digitalCertificate
+      description: Datos de TaxpayerEntity para crear o actualizar una empresa. Dirección, credenciales y certificado
+        mantienen su estructura anidada.
+    Address:
+      type: object
+      additionalProperties: false
+      properties:
+        street:
+          type: string
+          minLength: 1
+          maxLength: 250
+        geographicCode:
+          $ref: '#/components/schemas/UbigeoCode'
+        department:
+          type: string
+          maxLength: 100
+          minLength: 1
+          description: Nombre del departamento que corresponde al geographicCode; no es un código SUNAT independiente.
+            Debe coincidir con el registro INEI del catálogo 13.
+        province:
+          type: string
+          maxLength: 100
+          minLength: 1
+          description: Nombre del provincia que corresponde al geographicCode; no es un código SUNAT independiente.
+            Debe coincidir con el registro INEI del catálogo 13.
+        district:
+          type: string
+          maxLength: 100
+          minLength: 1
+          description: Nombre del distrito que corresponde al geographicCode; no es un código SUNAT independiente.
+            Debe coincidir con el registro INEI del catálogo 13.
+        countryCode:
+          $ref: '#/components/schemas/PeruCountryCode'
+      required:
+      - street
+      - geographicCode
+      - department
+      - province
+      - district
+      - countryCode
+    CompanyResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        specialIgvFrom:
+          type:
+          - string
+          - 'null'
+          format: date
+          description: Inicio de elegibilidad verificada por el contribuyente para la Ley 31556; requiere specialIgvUntil.
+        specialIgvUntil:
+          type:
+          - string
+          - 'null'
+          format: date
+          description: Fin inclusivo de elegibilidad. No sustituye verificar requisitos ni padrón SUNAT.
+        id:
+          type: string
+          format: uuid
+        legalName:
+          type: string
+        tradeName:
+          type:
+          - string
+          - 'null'
+        email:
+          type: string
+        address:
+          $ref: '#/components/schemas/Address'
+        createdAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        updatedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        taxpayerType:
+          $ref: '#/components/schemas/TaxpayerType'
+        accountId:
+          type: string
+          format: uuid
+        taxCredentialsConfigured:
+          type:
+          - boolean
+          - 'null'
+          readOnly: true
+          description: Indica si existen credenciales de envío configuradas. No revela usuario ni contraseña.
+        digitalCertificateConfigured:
+          type:
+          - boolean
+          - 'null'
+          readOnly: true
+          description: Indica si se configuró el certificado de firma. No revela el material PKCS#12 ni su contraseña.
+        logoBase64:
+          type:
+          - string
+          - 'null'
+          maxLength: 699052
+          description: Logo opcional de esta empresa. PNG/JPEG Base64 puro, hasta 512 KiB y 2048 x 2048 píxeles.
+            Null o vacío elimina el logo.
+        documentNumber:
+          type: string
+          pattern: ^[0-9]{11}$
+          description: RUC de la empresa de la cuenta autenticada.
+      description: Datos públicos/operativos de la empresa. Las credenciales SOL, claves y certificado privado solo
+        se admiten en operaciones de escritura y nunca se devuelven.
+      required:
+      - id
+      - accountId
+      - taxpayerType
+      - legalName
+      - email
+    DocumentUpsertRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        documentType:
+          $ref: '#/components/schemas/SalesDocumentType'
+        series:
+          type: string
+          pattern: ^[FB][A-Z0-9]{3}$
+        issueDate:
+          type:
+          - string
+          - 'null'
+          format: date
+        currency:
+          $ref: '#/components/schemas/CurrencyCode'
+        taxRegime:
+          type: string
+          enum:
+          - GENERAL
+          - MYPE_HOSPITALITY
+        establishment:
+          $ref: '#/components/schemas/Establishment'
+        customer:
+          $ref: '#/components/schemas/Customer'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentItem'
+          minItems: 1
+          maxItems: 500
+        paymentType:
+          type: string
+          enum:
+          - Contado
+          - Credito
+        pendingAmount:
+          type:
+          - string
+          - 'null'
+          pattern: ^[0-9]{1,12}(\.[0-9]{1,2})?$
+        installments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Installment'
+          minItems: 1
+          maxItems: 999
+        operationType:
+          $ref: '#/components/schemas/OperationType'
+        detraction:
+          $ref: '#/components/schemas/Detraction'
+        externalReference:
+          type: string
+          maxLength: 100
+        observations:
+          type: string
+          maxLength: 500
+        exchangeRate:
+          type: string
+          pattern: ^[0-9]{1,12}(\.[0-9]{1,6})?$
+      required:
+      - documentType
+      - series
+      - issueDate
+      - currency
+      - items
+      - operationType
+      description: Factura requiere customer con RUC y paymentType. Crédito exige saldo positivo igual a cuotas,
+        vencimientos posteriores a emisión. Boleta >S/700 requiere identificar al cliente. Fecha local Lima, máximo
+        3 días atrás para serie F y 7 para B. Elegibilidad del IGV especial verificada en la empresa. exchangeRate
+        obligatorio para boletas extranjeras, ICBPER o detracción en moneda extranjera.
+    DocumentApiResponse:
+      type: object
+      additionalProperties: false
+      description: Consulta operativa; emissionStatus es el estado interno completo. status agrupa CREATED/SIGNED/ACCEPTED/REJECTED/ANNULLED.
+        No interpretar SIGNED como aceptado por SUNAT.
+      required:
+      - id
+      - taxpayerId
+      - documentType
+      - series
+      - number
+      - status
+      - issueDate
+      - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        taxpayerId:
+          type: string
+          format: uuid
+        documentType:
+          $ref: '#/components/schemas/DocumentType'
+        series:
+          type: string
+          minLength: 4
+          maxLength: 4
+        number:
+          type: integer
+          format: int64
+          minimum: 1
+        status:
+          $ref: '#/components/schemas/DocumentStatus'
+        externalReference:
+          type:
+          - string
+          - 'null'
+          maxLength: 255
+        issueDate:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        sunatCode:
+          type:
+          - string
+          - 'null'
+          description: Código de respuesta fiscal recibido para este documento, si existe.
+        sunatDescription:
+          type:
+          - string
+          - 'null'
+          description: Descripción de respuesta SUNAT, si existe.
+        cdrAvailable:
+          type:
+          - boolean
+          - 'null'
+          description: Indica si está disponible el archivo CDR descargable.
+        xmlAvailable:
+          type:
+          - boolean
+          - 'null'
+          description: Indica si está disponible el archivo XML firmado.
+        referenceDocument:
+          $ref: '#/components/schemas/OriginalDocumentReference'
+        reasonCode:
+          $ref: '#/components/schemas/CreditNoteReasonCode'
+        emissionStatus:
+          type:
+          - string
+          - 'null'
+          description: 'HELD: guardado sin autorización de emisión; no lo procesa el conciliador. DRAFT: autorizado
+            y pendiente de preparación. SUBMITTED: enviado, todavía sin aceptación confirmada.'
+        communicationReference:
+          type:
+          - string
+          - 'null'
+        communicationStatus:
+          type:
+          - string
+          - 'null'
+        communicationTicket:
+          type:
+          - string
+          - 'null'
+        acceptedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        grantedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        acceptanceDeadlineBase:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        acceptanceDateSource:
+          type:
+          - string
+          - 'null'
+        reconciliation:
+          $ref: '#/components/schemas/ReconciliationState'
+        establishment:
+          $ref: '#/components/schemas/Establishment'
+        cancellationStatus:
+          type:
+          - string
+          - 'null'
+      allOf:
+      - if:
+          required:
+          - documentType
+          properties:
+            documentType:
+              const: '07'
+        then:
+          required:
+          - referenceDocument
+          - reasonCode
+        else:
+          not:
+            anyOf:
+            - required:
+              - referenceDocument
+            - required:
+              - reasonCode
+    CancellationRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        procedure:
+          type: string
+          enum:
+          - COMMUNICATION_BAJA
+          - DAILY_SUMMARY_VOID
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 250
+        notGranted:
+          type: boolean
+        previousReference:
+          type: string
+          pattern: ^(RA|RC)-[0-9]{8}-[0-9]{1,5}$
+      required:
+      - procedure
+      - reason
+      - notGranted
+    CancellationApiResponse:
+      type: object
+      additionalProperties: false
+      required:
+      - sunatCode
+      - sunatDescription
+      description: Resultado de una comunicación de baja o de resumen diario de anulación. La recepción del pedido
+        202 no implica aceptación SUNAT.
+      properties:
+        sunatCode:
+          type:
+          - string
+          - 'null'
+          pattern: ^[0-9]+$
+          description: Código recibido de SUNAT; en el CDR, 0 indica aceptación y un código distinto indica rechazo.
+            No es el reasonCode enviado al solicitar la anulación.
+        sunatDescription:
+          type:
+          - string
+          - 'null'
+          description: Descripción de SUNAT, incluido el motivo del rechazo; null si todavía no se recibió.
+        status:
+          type:
+          - string
+          - 'null'
+        id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        documentId:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        reference:
+          type:
+          - string
+          - 'null'
+        method:
+          type:
+          - string
+          - 'null'
+        ticket:
+          type:
+          - string
+          - 'null'
+        xmlAvailable:
+          type:
+          - boolean
+          - 'null'
+        cdrAvailable:
+          type:
+          - boolean
+          - 'null'
+        requestedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        completedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        nextRetryAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+      externalDocs:
+        description: 'SUNAT: respuesta de aplicación y constancia de recepción'
+        url: https://cpe.sunat.gob.pe/sites/default/files/inline-files/manual_programador%20%281%29.pdf
+    SessionApiResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        accountId:
+          type: string
+          format: uuid
+        ipAddress:
+          type:
+          - string
+          - 'null'
+          maxLength: 45
+        userAgent:
+          type:
+          - string
+          - 'null'
+        acceptLanguage:
+          type:
+          - string
+          - 'null'
+        browser:
+          type:
+          - string
+          - 'null'
+        operatingSystem:
+          type:
+          - string
+          - 'null'
+        deviceType:
+          type:
+          - string
+          - 'null'
+        createdAt:
+          type: string
+          format: date-time
+        lastUsedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        revokedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+      required:
+      - id
+      - accountId
+      - createdAt
+      description: Datos de SessionEntity para consultar sesiones. hash es un dato interno de autenticación y no
+        se devuelve. No contiene el campo current porque no existe en la entidad.
+    Pagination:
+      type: object
+      additionalProperties: false
+      required:
+      - page
+      - perPage
+      - totalPages
+      - totalItems
+      - hasNextPage
+      - hasPrevPage
+      properties:
+        page:
+          type: integer
+          minimum: 1
+          description: Página solicitada, comenzando en 1.
+        perPage:
+          type: integer
+          minimum: 1
+        totalPages:
+          type: integer
+          minimum: 0
+        totalItems:
+          type: integer
+          format: int64
+          minimum: 0
+        hasNextPage:
+          type: boolean
+        hasPrevPage:
+          type: boolean
+    CompanyPage:
+      type: object
+      additionalProperties: false
+      required:
+      - data
+      - pagination
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CompanyResponse'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    DocumentPage:
+      type: object
+      additionalProperties: false
+      required:
+      - data
+      - pagination
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentApiResponse'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+      description: 'Lista paginada de comprobantes. Cada elemento de data incluye status con el enum del backend:
+        CREATED, SIGNED, ACCEPTED, REJECTED o ANNULLED.'
+    SessionPage:
+      type: object
+      additionalProperties: false
+      required:
+      - data
+      - pagination
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SessionApiResponse'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+    TaxpayerType:
+      type: string
+      enum:
+      - NATURAL
+      - LEGAL
+      description: 'Enumeración interna del contrato (no corresponde a un catálogo SUNAT). <table>
+
+        <thead><tr><th>Valor</th><th>Significado</th></tr></thead> <tbody>
+
+        <tr><td>NATURAL</td><td>Persona natural</td></tr>
+
+        <tr><td>LEGAL</td><td>Persona jurídica</td></tr>
+
+        </tbody>
+
+        </table>'
+    TaxCredentials:
+      type: object
+      additionalProperties: false
+      required:
+      - user
+      - password
+      properties:
+        user:
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: Usuario SOL, sin anteponer el RUC.
+          writeOnly: true
+        password:
+          type: string
+          minLength: 1
+          maxLength: 100
+          writeOnly: true
+    DigitalCertificate:
+      type: object
+      additionalProperties: false
+      required:
+      - certificate
+      - password
+      properties:
+        certificate:
+          type: string
+          contentEncoding: base64
+          minLength: 1
+          maxLength: 1400000
+          description: Archivo PKCS#12 (.p12/.pfx) codificado en Base64; no ruta ni nombre de archivo.
+          writeOnly: true
+        password:
+          type: string
+          minLength: 1
+          maxLength: 100
+          writeOnly: true
+    DocumentType:
+      type: string
+      enum:
+      - '01'
+      - '03'
+      - '07'
+      - 08
+    SalesDocumentType:
+      type: string
+      enum:
+      - '01'
+      - '03'
+    DocumentStatus:
+      type: string
+      enum:
+      - PENDING
+      - CREATED
+      - SIGNED
+      - ACCEPTED
+      - REJECTED
+      - ANNULLED
+      description: 'Estado del comprobante dentro de la aplicación (NO un catálogo SUNAT). <table>
+
+        <thead><tr><th>Estado</th><th>Significado</th></tr></thead> <tbody>
+
+        <tr><td>PENDING</td><td>Solicitud recibida, pendiente de procesamiento</td></tr>
+
+        <tr><td>CREATED</td><td>Comprobante generado</td></tr>
+
+        <tr><td>SIGNED</td><td>XML firmado</td></tr>
+
+        <tr><td>ACCEPTED</td><td>Comprobante aceptado por SUNAT/OSE</td></tr>
+
+        <tr><td>REJECTED</td><td>Rechazado por SUNAT/OSE</td></tr>
+
+        <tr><td>ANNULLED</td><td>Anulado conforme al procedimiento tributario</td></tr>
+
+        </tbody>
+
+        </table>'
+    MessageResponse:
+      type: object
+      additionalProperties: false
+      required:
+      - message
+      properties:
+        message:
+          type: string
+          minLength: 1
+    TokenResponse:
+      type: object
+      additionalProperties: false
+      required:
+      - message
+      - accessToken
+      properties:
+        message:
+          type: string
+          minLength: 1
+        accessToken:
+          type: string
+          minLength: 1
+    CurrencyCode:
+      type: string
+      enum:
+      - PEN
+      - USD
+      - EUR
+    CustomerDocumentType:
+      type: string
+      enum:
+      - '0'
+      - '1'
+      - '4'
+      - '6'
+      - '7'
+    OperationType:
+      type: string
+      enum:
+      - '0101'
+      - '1001'
+      description: 1001 sólo factura de servicios SPOT expresamente declarada; 0101 venta nacional. No se infiere
+        sujeción por giro.
+    UnitCode:
+      type: string
+      pattern: ^[A-Z0-9]{2,3}$
+      description: 'Unidades admitidas por esta versión: subconjunto explícito del catálogo 03 SUNAT. Otros códigos
+        se rechazan con 422 aunque existan en el catálogo completo. NIU: bienes; ZZ: servicios.'
+      externalDocs:
+        description: SUNAT – Guía factura UBL 2.1 (tabla de unidades, con enlace al catálogo completo)
+        url: https://cpe.sunat.gob.pe/sites/default/files/inline-files/guia%2Bxml%2Bfactura%2Bversion%202-1%2B1%2B0%20%282%29_0%20%282%29.pdf
+      x-sunat-catalog: '03'
+      x-sunat-example-values:
+        BJ: Balde
+        BG: Bolsa
+        BO: Botellas
+        BX: Caja
+        CT: Cartones
+        CY: Cilindro
+        CJ: Conos
+        GRM: Gramo
+        SET: Juego
+        KGM: Kilogramo
+        KTM: Kilómetro
+        KT: Kit
+        CA: Latas
+        LBR: Libras
+        LTR: Litro
+        MTR: Metro
+        MLL: Millares
+        UM: Millón de unidades
+        NIU: Unidad (bienes)
+        ZZ: Unidad (servicios)
+      x-validated-catalog:
+        name: Catálogo 03 — UNECE Rec. 20
+        source: https://cpe.sunat.gob.pe/guias-y-manuales
+        mode: supported-subset
+        rejectUnknownWith: 422
+        noFallbackToRegex: true
+        rule: Validar pertenencia al enum de unidades admitidas antes de generar XML.
+      x-dynamic-enum: false
+      x-catalog-source: UN/ECE Recommendation 20 (catálogo 03)
+      enum:
+      - BJ
+      - BG
+      - BO
+      - BX
+      - CT
+      - CY
+      - CJ
+      - GRM
+      - SET
+      - KGM
+      - KTM
+      - KT
+      - CA
+      - LBR
+      - LTR
+      - MTR
+      - MLL
+      - UM
+      - NIU
+      - ZZ
+      - CS
+      - TNE
+      - DAY
+    Customer:
+      type: object
+      additionalProperties: false
+      required:
+      - documentType
+      - documentNumber
+      - name
+      properties:
+        documentType:
+          $ref: '#/components/schemas/CustomerDocumentType'
+        documentNumber:
+          type: string
+          maxLength: 20
+        name:
+          type: string
+          minLength: 1
+          maxLength: 250
+        email:
+          type: string
+        address:
+          type: string
+          maxLength: 250
+      allOf:
+      - if:
+          properties:
+            documentType:
+              const: '6'
+        then:
+          properties:
+            documentNumber:
+              type: string
+              pattern: ^[0-9]{11}$
+      - if:
+          properties:
+            documentType:
+              const: '1'
+        then:
+          properties:
+            documentNumber:
+              type: string
+              pattern: ^[0-9]{8}$
+      - if:
+          properties:
+            documentType:
+              const: '4'
+        then:
+          properties:
+            documentNumber:
+              type: string
+              pattern: ^[A-Za-z0-9]{1,12}$
+      - if:
+          properties:
+            documentType:
+              const: '7'
+        then:
+          properties:
+            documentNumber:
+              type: string
+              pattern: ^[A-Za-z0-9]{1,12}$
+    DocumentItem:
+      type: object
+      additionalProperties: false
+      properties:
+        productCode:
+          type: string
+          maxLength: 60
+        description:
+          type: string
+          minLength: 1
+          maxLength: 500
+        unitCode:
+          $ref: '#/components/schemas/UnitCode'
+        quantity:
+          type: string
+          pattern: ^[0-9]{1,12}(\.[0-9]{1,6})?$
+        unitPrice:
+          type: string
+          pattern: ^[0-9]{1,12}(\.[0-9]{1,6})?$
+        taxAffectationCode:
+          type: string
+          enum:
+          - '10'
+          - '20'
+          - '30'
+        discountAmount:
+          type:
+          - string
+          - 'null'
+          pattern: ^[0-9]{1,12}(\.[0-9]{1,2})?$
+        icbperQuantity:
+          type: integer
+          minimum: 1
+          maximum: 99999
+      required:
+      - description
+      - unitCode
+      - quantity
+      - unitPrice
+      - taxAffectationCode
+      description: unitPrice incluye IGV, excluye ICBPER. discountAmount es descuento total de línea incluido IGV.
+        Para bolsas, icbperQuantity coincide con quantity entero; tasa calculada por servidor (S/0.50 por bolsa)
+        y convertida con exchangeRate si corresponde.
+    Installment:
+      type: object
+      additionalProperties: false
+      required:
+      - dueDate
+      - amount
+      properties:
+        dueDate:
+          type: string
+          format: date
+          description: Fecha igual o posterior a la emisión.
+        amount:
+          type: string
+          pattern: ^(?=.*[1-9])[0-9]+(?:\.[0-9]{1,2})?$
+          description: Monto de cuota mayor que cero; la suma de todas las cuotas debe coincidir con el saldo pendiente.
+    CreditNoteReasonCode:
+      type: string
+      enum:
+      - '01'
+      - '02'
+      - '03'
+      - '04'
+      - '05'
+      - '06'
+      - '07'
+      - 09
+      - '13'
+    CreditNoteIssueRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        reasonCode:
+          $ref: '#/components/schemas/CreditNoteReasonCode'
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 250
+        series:
+          type: string
+          pattern: ^[FB][A-Z0-9]{3}$
+        issueDate:
+          type:
+          - string
+          - 'null'
+          format: date
+        externalReference:
+          type: string
+          maxLength: 100
+        returnedItems:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            properties:
+              lineNumber:
+                type: integer
+                minimum: 1
+              quantity:
+                type: string
+                pattern: ^[0-9]{1,12}(\.[0-9]{1,6})?$
+            required:
+            - lineNumber
+            - quantity
+          minItems: 1
+          maxItems: 500
+        amount:
+          type:
+          - string
+          - 'null'
+          pattern: ^[0-9]{1,12}(\.[0-9]{1,2})?$
+        adjustments:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            properties:
+              lineNumber:
+                type: integer
+                minimum: 1
+              amount:
+                type:
+                - string
+                - 'null'
+                pattern: ^[0-9]{1,12}(\.[0-9]{1,2})?$
+            required:
+            - lineNumber
+            - amount
+          minItems: 1
+          maxItems: 500
+        descriptions:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            properties:
+              lineNumber:
+                type: integer
+                minimum: 1
+              description:
+                type: string
+                minLength: 1
+                maxLength: 500
+            required:
+            - lineNumber
+            - description
+          minItems: 1
+          maxItems: 500
+        correctedPayment:
+          $ref: '#/components/schemas/Payment'
+      required:
+      - reasonCode
+      - reason
+      - series
+      - issueDate
+      description: '01/02/06: anulación o devolución total, sin selección. 03: descriptions, importe fiscal cero.
+        04: amount global incluido IGV; distribución proporcional. 05/09: adjustments por línea, importes incluidos
+        IGV. 07: returnedItems. 13: correctedPayment, sólo factura al crédito, sin cobros registrados ni otra corrección
+        pendiente; importe fiscal cero. 04/05 no admiten boletas. Original aceptado; boleta otorgada. Las notas
+        pendientes reservan saldo. Las notas no reemplazan el XML del original.'
+    OriginalDocumentReference:
+      type: object
+      additionalProperties: false
+      required:
+      - documentType
+      - series
+      - number
+      properties:
+        documentType:
+          $ref: '#/components/schemas/SalesDocumentType'
+        series:
+          type: string
+          pattern: ^[FB][A-Z0-9]{3}$
+        number:
+          type: integer
+          minimum: 1
+          maximum: 99999999
+        documentId:
+          type: string
+          format: uuid
+    ApiErrorResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        instance:
+          type: string
+        requestId:
+          type: string
+      description: Problem Details de Spring. requestId opcional para correlación; el código HTTP determina el error.
+    UbigeoCode:
+      type: string
+      pattern: ^(?:[0-9]{6})$
+      minLength: 6
+      description: 'Catálogo SUNAT N.º 13 (UBIGEO), códigos distritales INEI de seis dígitos. La tabla contiene
+        ejemplos, no el padrón completo. Validar existencia y correspondencia con departamento, provincia y distrito
+        mediante el catálogo oficial. <table>
+
+        <thead><tr><th>UBIGEO</th><th>Departamento / Provincia / Distrito</th></tr></thead> <tbody>
+
+        <tr><td>150122</td><td>Lima / Lima / Miraflores</td></tr>
+
+        <tr><td>150101</td><td>Lima / Lima / Lima</td></tr>
+
+        </tbody>
+
+        </table>
+
+
+        VALIDACIÓN OBLIGATORIA: además del patrón, verificar el código en la tabla oficial vigente; rechazar códigos
+        inexistentes con HTTP 422. La tabla anterior contiene ejemplos, NO el padrón completo.'
+      x-sunat-catalog: '13'
+      x-sunat-validation: Catálogo distrital oficial INEI (consulta de códigos estandarizados)
+      x-sunat-example-values:
+        '150122': Lima / Lima / Miraflores
+        '150101': Lima / Lima / Lima
+      externalDocs:
+        description: INEI – Consulta oficial de ubigeos; referencia del catálogo 13 SUNAT
+        url: https://www.gob.pe/15028-consultar-codigos-estandarizados-del-inei
+      x-validated-catalog:
+        name: Catálogo 13 — INEI
+        source: https://www.datosabiertos.gob.pe/dataset/ubigeos-c%C3%B3digos-de-ubicaci%C3%B3n-geogr%C3%A1fica-instituto-nacional-de-estad%C3%ADstica-e-inform%C3%A1tica-inei
+        mode: required-server-side-membership
+        rejectUnknownWith: 422
+        noFallbackToRegex: true
+        rule: Validar pertenencia a versión vigente del catálogo completo en la implementación, antes de generar
+          XML.
+      x-dynamic-enum: true
+      maxLength: 6
+    PeruCountryCode:
+      type: string
+      pattern: ^(?:PE)$
+      minLength: 1
+      enum:
+      - PE
+      description: 'Catálogo SUNAT N.º 04, países ISO 3166-1 alfa-2. El domicilio fiscal del emisor se mantiene
+        limitado a Perú en este contrato. <table> <thead><tr><th>Código</th><th>Descripción</th></tr></thead> <tbody>
+
+        <tr><td>PE</td><td>Perú</td></tr>
+
+        </tbody>
+
+        </table>'
+      x-sunat-catalog: '04'
+      x-sunat-example-values:
+        PE: Perú
+      externalDocs:
+        description: SUNAT – Catálogo 04 / ISO 3166-1 alfa-2
+        url: https://www.sunat.gob.pe/legislacion/superin/2017/anexosV-318-2017.pdf
+    PdfFormat:
+      type: string
+      enum:
+      - A4
+      - TICKET_48
+      - TICKET_50
+      - TICKET_54
+      - TICKET_55
+      - TICKET_58
+      - TICKET_80
+      default: TICKET_55
+      description: 'Formato de impresión del PDF, no un catálogo SUNAT. A4 corresponde a ISO 216; TICKET_* son formatos
+        propios implementados por el backend. Los tickets tienen 3000 puntos de alto por página (aproximadamente
+        1058,33 mm). <table>
+
+        <thead><tr><th>Valor</th><th>Dimensiones</th><th>Referencia</th></tr></thead> <tbody>
+
+        <tr><td>A4</td><td>210 × 297 mm</td><td>ISO 216</td></tr>
+
+        <tr><td>TICKET_48</td><td>48 mm de ancho</td><td>Formato propio</td></tr>
+
+        <tr><td>TICKET_50</td><td>50 mm de ancho</td><td>Formato propio</td></tr>
+
+        <tr><td>TICKET_55</td><td>55 mm de ancho</td><td>Formato propio</td></tr>
+
+        <tr><td>TICKET_58</td><td>58 mm de ancho</td><td>Formato propio</td></tr>
+
+        <tr><td>TICKET_80</td><td>80 mm de ancho</td><td>Formato propio</td></tr>
+
+        </tbody>
+
+        </table>'
+    AsyncOperationResponse:
+      type: object
+      additionalProperties: false
+      required:
+      - message
+      - documentId
+      - status
+      properties:
+        message:
+          type: string
+          minLength: 1
+        documentId:
+          type: string
+          format: uuid
+          description: ID del comprobante creado (emisión / nota) o del documento original (baja); GET /companies/{documentNumber}/documents/{documentId}.
+        status:
+          type: string
+          const: PENDING
+          description: Solicitud registrada. No significa que SUNAT haya aceptado el documento.
+      description: Respuesta única HTTP 202 para solicitudes asíncronas. El cliente puede consultar el estado del
+        documento por documentId.
+    Establishment:
+      type: object
+      additionalProperties: false
+      properties:
+        code:
+          type: string
+          pattern: ^[0-9]{4}$
+        name:
+          type: string
+          maxLength: 250
+        address:
+          $ref: '#/components/schemas/Address'
+      required:
+      - code
+      - address
+      description: 'Instantánea del establecimiento emisor autorizado: código SUNAT y domicilio. Sin registro CRUD
+        separado ni límite de 10. La serie se reserva automáticamente por cuenta, RUC, tipo y serie.'
+    Detraction:
+      type: object
+      additionalProperties: false
+      properties:
+        serviceCode:
+          type: string
+          enum:
+          - '012'
+          - 019
+          - '020'
+          - '021'
+          - '022'
+          - '024'
+          - '025'
+          - '026'
+          - '030'
+          - '037'
+        bankAccount:
+          type: string
+          pattern: ^[0-9]{11}$
+      required:
+      - serviceCode
+      - bankAccount
+      description: Servicios gravados SPOT sobre S/700; monto calculado por el servidor en PEN, redondeado al entero.
+        Se excluye del saldo a crédito. No ejecuta depósitos, libera fondos ni tramita su devolución.
+    Payment:
+      type: object
+      additionalProperties: false
+      properties:
+        type:
+          type: string
+          enum:
+          - CREDIT
+        pendingAmount:
+          type:
+          - string
+          - 'null'
+          pattern: ^[0-9]{1,12}(\.[0-9]{1,2})?$
+        installments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Installment'
+          minItems: 1
+          maxItems: 999
+      required:
+      - type
+      - pendingAmount
+      - installments
+    DebitNoteDraft:
+      type: object
+      additionalProperties: false
+      properties:
+        reasonCode:
+          type: string
+          enum:
+          - '01'
+          - '02'
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 250
+        series:
+          type: string
+          pattern: ^[FB][A-Z0-9]{3}$
+        issueDate:
+          type:
+          - string
+          - 'null'
+          format: date
+        externalReference:
+          type: string
+          maxLength: 100
+        charges:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            properties:
+              lineNumber:
+                type: integer
+                minimum: 1
+              amount:
+                type:
+                - string
+                - 'null'
+                pattern: ^[0-9]{1,12}(\.[0-9]{1,2})?$
+              description:
+                type: string
+                maxLength: 500
+            required:
+            - lineNumber
+            - amount
+          minItems: 1
+          maxItems: 500
+      required:
+      - reasonCode
+      - reason
+      - series
+      - issueDate
+      - charges
+      description: 01 intereses por mora; 02 aumento de valor. Original aceptado, otorgado y vigente. Cargos positivos
+        incluidos IGV; conservan tributo del ítem original. No vuelven a gravar bolsas. Aumenta saldo cuando se
+        acepta.
+    ReconciliationState:
+      type: object
+      additionalProperties: false
+      properties:
+        attempts:
+          type:
+          - integer
+          - 'null'
+        leaseToken:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        leaseUntil:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        nextAttemptAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        manualReview:
+          type:
+          - boolean
+          - 'null'
+        lastError:
+          type:
+          - string
+          - 'null'
+    CollectionRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        amount:
+          type:
+          - string
+          - 'null'
+          pattern: ^[0-9]{1,12}(\.[0-9]{1,2})?$
+        currency:
+          $ref: '#/components/schemas/CurrencyCode'
+        paidOn:
+          type:
+          - string
+          - 'null'
+          format: date
+        reference:
+          type: string
+          maxLength: 100
+      required:
+      - amount
+      - currency
+      - paidOn
+    CollectionEntry:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        keyHash:
+          type:
+          - string
+          - 'null'
+        amount:
+          type:
+          - string
+          - 'null'
+          pattern: ^[0-9]{1,12}(\.[0-9]{1,2})?$
+        currency:
+          $ref: '#/components/schemas/CurrencyCode'
+        paidOn:
+          type:
+          - string
+          - 'null'
+          format: date
+        reference:
+          type:
+          - string
+          - 'null'
+        registeredAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        reversedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        reversalReason:
+          type:
+          - string
+          - 'null'
+    CollectionBalance:
+      type: object
+      additionalProperties: false
+      properties:
+        originalTotal:
+          type:
+          - string
+          - 'null'
+          pattern: ^[0-9]{1,12}(\.[0-9]{1,2})?$
+        creditedAmount:
+          type:
+          - string
+          - 'null'
+          pattern: ^[0-9]{1,12}(\.[0-9]{1,2})?$
+        creditedToCustomer:
+          type:
+          - string
+          - 'null'
+          pattern: ^[0-9]{1,12}(\.[0-9]{1,2})?$
+        detractionAmount:
+          type:
+          - string
+          - 'null'
+          pattern: ^[0-9]{1,12}(\.[0-9]{1,2})?$
+        debitedAmount:
+          type:
+          - string
+          - 'null'
+          pattern: ^[0-9]{1,12}(\.[0-9]{1,2})?$
+        initialPayment:
+          type:
+          - string
+          - 'null'
+          pattern: ^[0-9]{1,12}(\.[0-9]{1,2})?$
+        collectedAmount:
+          type:
+          - string
+          - 'null'
+          pattern: ^[0-9]{1,12}(\.[0-9]{1,2})?$
+        outstandingAmount:
+          type:
+          - string
+          - 'null'
+          pattern: ^[0-9]{1,12}(\.[0-9]{1,2})?$
+        refundableAmount:
+          type:
+          - string
+          - 'null'
+          pattern: ^[0-9]{1,12}(\.[0-9]{1,2})?$
+        currency:
+          $ref: '#/components/schemas/CurrencyCode'
+        entries:
+          type: array
+          items:
+            $ref: '#/components/schemas/CollectionEntry'
+      description: Saldo comercial separado del XML fiscal. creditedAmount es crédito fiscal total; creditedToCustomer
+        descuenta proporcionalmente SPOT. detractionAmount es importe separado de caja, no prueba de depósito BN.
+        refundableAmount informa importe a devolver; no ejecuta transferencias. Ventas aceptadas con saldo de crédito
+        o débito admiten abonos; bloquea notas o bajas pendientes. Repetir clave de abono devuelve el mismo recibo,
+        incluso revertido.
+    ReversalRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 250
+      required:
+      - reason
+    Publication:
+      type: object
+      additionalProperties: false
+      properties:
+        key:
+          type: string
+        path:
+          type: string
+        minimumAvailableUntil:
+          type:
+          - string
+          - 'null'
+          format: date
+    CommunicationRecord:
+      type: object
+      additionalProperties: false
+      properties:
+        reference:
+          type:
+          - string
+          - 'null'
+        kind:
+          type:
+          - string
+          - 'null'
+        status:
+          type:
+          - string
+          - 'null'
+        code:
+          type:
+          - string
+          - 'null'
+        description:
+          type:
+          - string
+          - 'null'
+        ticket:
+          type:
+          - string
+          - 'null'
+        attemptedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        completedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+    SaleRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - document
+      properties:
+        document:
+          $ref: '#/components/schemas/DocumentUpsertRequest'
+    SaleOperationResponse:
+      type: object
+      required:
+      - documentId
+      - message
+      - recoveryUrl
+      - document
+      properties:
+        documentId:
+          type: string
+          format: uuid
+        message:
+          type: string
+        recoveryUrl:
+          type: string
+        document:
+          $ref: '#/components/schemas/DocumentApiResponse'
+    PublicStatus:
+      type: object
+      properties:
+        documentNumber:
+          type: string
+        documentType:
+          type: string
+        series:
+          type: string
+        number:
+          type: integer
+        issueDate:
+          type: string
+        currency:
+          type: string
+        totalAmount:
+          type: string
+        emissionStatus:
+          type: string
+        sunatCode:
+          type: string
+        xmlAvailable:
+          type: boolean
+        cdrAvailable:
+          type: boolean
+x-implementation-checklist:
+- 'Emisor y certificado: comprobar que el material firmante, RUC y autorización de envío correspondan a la empresa;
+  no permite asumir inscripción PSE/OSE.'
+- Autorización por RUC y tenant para cada llamada; una cuenta no puede emitir o leer comprobantes de una empresa
+  ajena.
+- Encripte certificados P12, contraseñas SOL y cualquier secreto en reposo; TLS fuera de localhost; nunca mostrar
+  contraseñas en GET, logs o CDR.
+- Validar XML UBL 2.1 (XSD + reglas SUNAT actualizadas), vigencia de catálogos, serie y numeración, fecha de emisión,
+  identidad, impuestos y condición de otorgado.
+- Para boletas distinguir envío individual versus resumen diario según mecanismo SEE habilitado; para bajas distinguir
+  comunicación de baja y resumen diario.
+- Conservar XML firmado, CDR o resultado SUNAT/OSE, códigos de respuesta, fecha de entrega/otorgamiento y auditoría
+  inmutable.
+- Montos/cantidades y relaciones entre varios comprobantes requieren validaciones sobre datos históricos y no pueden
+  garantizarse con OpenAPI JSON Schema por sí solo.
+- Hacer pruebas en entorno de homologación y con credenciales/certificado reales antes de producción.
+x-implementation-status:
+  status: partial-service-tested
+  commercialReleaseReady: false
+  supportedOperationTypes:
+  - '0101'
+  supportedTaxAffectationCodes:
+  - '10'
+  - '20'
+  - '30'
+  supportedCreditNoteReasons:
+  - '01'
+  - '06'
+  - '07'
+  specialIgvEligibility: Explicit date range supplied by taxpayer; no automatic SUNAT padron verification
+  summaryCurrency: Original document currency, without conversion
+  partialCreditBalance: Quantity, taxable base, tax and total checked under issuer lock; pending notes reserve balance
+  notImplemented:
+  - Debit notes 08
+  - Global discounts and charges
+  - ISC, ICBPER, free transfers and specific consumption surcharges
+  - Remaining operation types in catalog 51
+  - Remaining tax affectations in catalog 07
+  - Credit note reasons 02,03,04,05,08,09,10,11,12,13
+  - Dynamic fiscal catalog and taxpayer eligibility checks
+  - Automatic recovery of abandoned PREPARING operations
+  - Reconciliation of RC submissions whose ticket was lost
+  errors: Spring native ProblemDetail; ApiErrorResponse remains a target contract, not implemented uniformly
+  verificationScope: Service tests with real MapStruct, cryptography, UBL schema validation, XML signatures and
+    PDF. Only persistence and remote SUNAT responses are replaced. No live SUNAT or PostgreSQL acceptance asserted.

@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: ${DATASOURCE_URL}
+    username: ${DATASOURCE_USERNAME}
+    password: ${DATASOURCE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+app:
+  tax:
+    emission-endpoint: ${TAX_EMISSION_ENDPOINT:https://e-factura.sunat.gob.pe/ol-ti-itcpfegem/billService}
+    consultation-endpoint: ${TAX_CONSULTATION_ENDPOINT:https://e-factura.sunat.gob.pe/ol-it-wsconscpegem/billConsultService}
+  security:
+    secret: ${SECURITY_SECRET}

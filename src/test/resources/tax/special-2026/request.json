@@ -1,0 +1,6 @@
+{
+  "documentType":"01", "series":"F001", "issueDate":"2026-10-26", "currency":"PEN",
+  "customer":{"documentType":"6","documentNumber":"20123456786","name":"CLIENTE DEMO"},
+  "items":[{"description":"Pollo a la brasa", "quantity":"1", "unitCode":"NIU", "unitPrice":"110.50", "taxAffectationCode":"10"}],
+  "paymentType":"Contado", "operationType":"0101", "taxRegime":"MYPE_HOSPITALITY"
+}

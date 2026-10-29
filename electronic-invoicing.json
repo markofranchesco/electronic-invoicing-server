@@ -1,0 +1,1130 @@
+{
+  "info": {
+    "name": "Fábrica Abstracta S.A.C.S. — Facturación electrónica",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Configuración una sola vez; ventas directas al PDF; carpetas separadas de consulta, reimpresión, recuperación, notas de crédito y abonos. Elegir solicitudes según la operación: no ejecutar toda la colección de corrido. Los valores iniciales son ejemplos y requieren datos/certificado reales en producción. El ticket no agrega textos comerciales de demostración. El PDF no muestra etiquetas de entorno. Ejecutar primero la carpeta Configuración inicial completa (4 solicitudes). Antes de cada operación de empresa la colección realiza un GET de verificación; si falta empresa o token, explica el paso pendiente y no envía la venta. tokenAcceso se toma de la colección, no de un entorno antiguo. QR de consulta web y QR fiscal separados."
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{tokenAcceso}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "certificadoBase64",
+      "value": "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",
+      "type": "string",
+      "description": "PKCS12 autofirmado del fixture del proyecto. Sirve para probar validación/firma local; NO acredita certificado autorizado ni aceptación SUNAT."
+    },
+    {
+      "key": "claveCertificado",
+      "value": "DemoCertificado2026!",
+      "type": "string",
+      "description": "Contraseña del certificado de pruebas incluido; no usar ese certificado en producción."
+    },
+    {
+      "key": "claveSol",
+      "value": "MODDATOS",
+      "type": "string",
+      "description": "Valor de demostración del fixture beta; no credencial productiva."
+    },
+    {
+      "key": "contrasena",
+      "value": "PolleriaDemo2026!",
+      "type": "string",
+      "description": "Contraseña de la cuenta de demostración; cambiar para uso real."
+    },
+    {
+      "key": "correo",
+      "value": "admin.polleria@example.com",
+      "type": "string",
+      "description": "Cuenta de demostración de esta API. Se crea en el primer paso; no es usuario SOL."
+    },
+    {
+      "key": "correoEmpresa",
+      "value": "ventas.polleria@example.com",
+      "type": "string",
+      "description": "Correo de ejemplo del emisor."
+    },
+    {
+      "key": "fechaEmision",
+      "value": "",
+      "type": "string",
+      "description": "Resultado automático de un paso anterior (ID, clave o fecha). No inventar un valor; ejecutar el flujo en orden."
+    },
+    {
+      "key": "fechaVencimiento",
+      "value": "",
+      "type": "string",
+      "description": "Resultado automático de un paso anterior (ID, clave o fecha). No inventar un valor; ejecutar el flujo en orden."
+    },
+    {
+      "key": "fechaVencimientoCorregida",
+      "value": "",
+      "type": "string",
+      "description": "Resultado automático de un paso anterior (ID, clave o fecha). No inventar un valor; ejecutar el flujo en orden."
+    },
+    {
+      "key": "idEjecucion",
+      "value": "",
+      "type": "string",
+      "description": "Se genera automáticamente y se conserva al reintentar. Vaciar sólo para iniciar una venta nueva."
+    },
+    {
+      "key": "ruc",
+      "value": "20123456786",
+      "type": "string",
+      "description": "RUC ficticio del fixture y del certificado de pruebas. Para emisión real sustituir junto con certificado/SOL."
+    },
+    {
+      "key": "rucCliente",
+      "value": "20123456786",
+      "type": "string",
+      "description": "RUC de ejemplo para facturas, sustituir por el cliente real en el piloto."
+    },
+    {
+      "key": "tokenAcceso",
+      "value": "",
+      "type": "string",
+      "description": "Se llena automáticamente al crear cuenta o iniciar sesión; no escribir un token inventado."
+    },
+    {
+      "key": "urlBase",
+      "value": "http://localhost:8080",
+      "type": "string",
+      "description": "URL del servidor local. El perfil development ya apunta a SUNAT beta."
+    },
+    {
+      "key": "usuarioSol",
+      "value": "MODDATOS",
+      "type": "string",
+      "description": "Valor de demostración del fixture beta; no credencial productiva."
+    },
+    {
+      "key": "logoBase64",
+      "value": "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LdAj7EePHuXaNW7cuIULF/IsZ926dVwPlKrV6uPHj+tuP3ToEFdpFhYWn3/+Oc+qBUJxZEB0zHe3zFtvvaX7+/TFF19obampqcnOztba6OXlFR4eLmDjhGFtbR0cHKy1UalUpqamUmmPoXRfiP+EhoZOmDBBoHpzcnK4di1evJh/OU888URISIhBtZw4cYLr+FmzZo0bN45/7UKgODIgOuYLdw8Pj4iICK2NpaWl58+f771lz549unfvJicnk7/WG7DS09N1N+7du/fOnTvmb4xB7t69+88//3Dtfe211wSqt7KykvBgzpw5cwwqjfCeoLi4WGtLU1NTRUUF1/HCdZkniiMDYmTWxFy9erXuxt4PNKlUqr1792odYG9vHxMTI2zLBDNt2jTdvyK1Wp2SkkKlPfzpfu3RW/+nl+Fy7do1wt6JEycaVJqfnx/XroaGhsbGxt5byF2eMmWKQVWbHMWRATEya7gHBQUFBgZqbTx58mRlZWXPvzMzM+/fv691wMqVKx0cHMzRPmGkpaXpXpvOysoi/63237p16yz40fvEze3bt7lKdnR07M9EWmRyuZxrl7u7+7BhwwwqjRBhEomkurq694+Ej1MODg7e3t4GVW1yFEcGxMjc1zp037x3d3fv2bOn59+60xJYWFgkJyebo2WCCQgIWLZsmdZGjUazZcsWKu3hqaamhmuXm5ubcLOB19fXc+0aMWKEoaXp3qPVW11dXe8fa2truY4cOXIk9QnQKY4MiJG5w33p0qVubm5aG/fv39/W1nb+/HmZTKa1Kyws7OmnnzZX64SSmpo6aNAgrY1nzpy5cOEClfbw8ejRI65dTk5OhBOvXLnC8xOD3u8n29rauEq2t7c3pAcSiURiaWk5dOhQrr1adREevuc/VbpwKI4MiJG5w33w4MG6z260tLRkZGTonU1M72V60fHy8tJ7f/R7771n/sbw9PjxY65dRkSJSeolPHpDQIgwrbpodZkniiMDYkThFpQ33nijZ8KN3tLT00+ePKm10cfHZ/bs2eZql7C2b9+u+7dUUFBw6tQpKu3pE+FxGMKbekHr5bkMgBa9D8rprYtWl3miODIgRhTC3c3NbcmSJVobq6urdWe5W716NfULnabi7u6u91PIli1bCNP7UURYQq+lpUW4egmTRxoxZ2FXVxchwrTqotVlniiODIgRnZvH16xZ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",
+      "type": "string",
+      "description": "Logo PNG de demostración. Reemplazar por el Base64 puro de cada empresa."
+    },
+    {
+      "key": "razonSocial",
+      "value": "MI NEGOCIO S.A.C.",
+      "type": "string",
+      "description": "Razón social real del emisor, debe corresponder al RUC."
+    },
+    {
+      "key": "nombreComercial",
+      "value": "MI NEGOCIO",
+      "type": "string",
+      "description": ""
+    },
+    {
+      "key": "idVenta",
+      "value": "",
+      "type": "string",
+      "description": "ID devuelto por venta o seleccionado en consultas."
+    },
+    {
+      "key": "idVentaCredito",
+      "value": "",
+      "type": "string",
+      "description": "ID de la factura al crédito."
+    },
+    {
+      "key": "idNota",
+      "value": "",
+      "type": "string",
+      "description": "Se completa al emitir nota."
+    },
+    {
+      "key": "idPago",
+      "value": "",
+      "type": "string",
+      "description": "Se completa al registrar abono."
+    },
+    {
+      "key": "pagina",
+      "value": "1",
+      "type": "string",
+      "description": ""
+    },
+    {
+      "key": "porPagina",
+      "value": "20",
+      "type": "string",
+      "description": ""
+    },
+    {
+      "key": "formatoTicket",
+      "value": "TICKET_80",
+      "type": "string",
+      "description": "Cambiar a TICKET_54 para impresora de 54 mm."
+    },
+    {
+      "key": "tipoComprobante",
+      "value": "03",
+      "type": "string",
+      "description": ""
+    },
+    {
+      "key": "serieNota",
+      "value": "BC01",
+      "type": "string",
+      "description": ""
+    },
+    {
+      "key": "rutaConsulta",
+      "value": "",
+      "type": "string",
+      "description": "Ruta pública generada por el backend."
+    },
+    {
+      "key": "idAbono",
+      "value": "",
+      "type": "string",
+      "description": "Identificador de intención del abono; vacío genera uno."
+    },
+    {
+      "key": "idAnulacion",
+      "value": "",
+      "type": "string",
+      "description": "Identificador de intención de la nota; vacío genera uno."
+    },
+    {
+      "key": "idEmpresa",
+      "value": "",
+      "type": "string",
+      "description": "Se obtiene al verificar la empresa de la cuenta autenticada."
+    },
+    {
+      "key": "idCuenta",
+      "value": "",
+      "type": "string",
+      "description": "Se obtiene al verificar la empresa de la cuenta autenticada."
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// tokenAcceso se toma de la colección: no reutilizar un token antiguo del entorno.",
+          "const token = pm.collectionVariables.get('tokenAcceso') || '';",
+          "pm.variables.set('tokenAcceso', token);",
+          "if (!pm.collectionVariables.get('idEjecucion')) {",
+          "  pm.collectionVariables.set('idEjecucion', pm.variables.replaceIn('{{$guid}}'));",
+          "  const now = Date.now() - 5*3600000;",
+          "  pm.collectionVariables.set('fechaEmision', new Date(now).toISOString().slice(0,10));",
+          "  pm.collectionVariables.set('fechaVencimiento', new Date(now+30*86400000).toISOString().slice(0,10));",
+          "  pm.collectionVariables.set('fechaVencimientoCorregida', new Date(now+45*86400000).toISOString().slice(0,10));",
+          "}",
+          "const raw = pm.request.url.toString();",
+          "const resolved = pm.variables.replaceIn(raw);",
+          "const scoped = /\\/companies\\/[^/?]+\\/(?:sales|documents)(?:[/?]|$)/.test(resolved);",
+          "function stop(message) {",
+          "  console.error(message);",
+          "  pm.test('Preparación del flujo', () => { throw new Error(message); });",
+          "  pm.execution.setNextRequest(null);",
+          "  pm.execution.skipRequest();",
+          "}",
+          "if (scoped) {",
+          "  if (!token) stop('Falta iniciar sesión. Ejecuta Configuración inicial: 01, 02, 03 y 04, en ese orden.');",
+          "  else {",
+          "    const ruc = pm.variables.get('ruc');",
+          "    const base = String(pm.variables.get('urlBase') || '').replace(/\\/$/,'');",
+          "    pm.sendRequest({url: base+'/companies/'+ruc, method:'GET', header:{Authorization:'Bearer '+token}}, (error,response) => {",
+          "      if (error) { stop('No se pudo verificar la empresa. Comprueba urlBase y que la API esté iniciada.'); return; }",
+          "      if (response.code === 404) { stop('La empresa '+ruc+' no existe para esta cuenta. Ejecuta 03 · Guardar empresa y 04 · Verificar empresa. Si reiniciaste H2 en memoria, vuelve a ejecutar Configuración inicial completa.'); return; }",
+          "      if (response.code === 401 || response.code === 403) { stop('La sesión no es válida. Ejecuta 02 · Iniciar sesión y vuelve a verificar la empresa.'); return; }",
+          "      if (response.code !== 200) { stop('Falló la verificación de empresa: HTTP '+response.code+'. Revisa GET /companies/'+ruc+'.'); return; }",
+          "      const company = response.json();",
+          "      if (company.documentNumber !== ruc) { stop('El RUC de la respuesta no coincide. Actualiza código y colección juntos.'); return; }",
+          "      pm.collectionVariables.set('idEmpresa',company.id);",
+          "      pm.collectionVariables.set('idCuenta',company.accountId);",
+          "      const ids = ['idVenta','idVentaCredito','idNota','idPago'];",
+          "      for (const name of ids) if (raw.includes('{{'+name+'}}') && !pm.variables.get(name)) {",
+          "        stop('Falta '+name+'. Emite o selecciona el comprobante/pago antes de esta operación.'); return;",
+          "      }",
+          "    });",
+          "  }",
+          "}"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "01 · Configuración inicial",
+      "item": [
+        {
+          "name": "01 · Crear cuenta de acceso",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{urlBase}}/sign-up",
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{correo}}\",\n  \"password\": \"{{contrasena}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Crea la cuenta de acceso a esta API con correo y contraseña. Guarda tokenAcceso. Si el correo ya existe (409), continuar con Iniciar sesión usando su contraseña; no se considera una cuenta nueva. Configuración inicial; no repetir por cada venta."
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('tokenAcceso', '');",
+                  "pm.variables.set('tokenAcceso', '');"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Cuenta creada o correo ya registrado', () => pm.expect([200,409]).to.include(pm.response.code));",
+                  "if (pm.response.code === 200) pm.collectionVariables.set('tokenAcceso', pm.response.json().accessToken);",
+                  "if (![200,409].includes(pm.response.code)) pm.execution.setNextRequest(null);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "02 · Iniciar sesión y guardar el token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{urlBase}}/sign-in",
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{correo}}\",\n  \"password\": \"{{contrasena}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Autentica la cuenta creada y guarda automáticamente tokenAcceso para las siguientes solicitudes. Estas credenciales son distintas de SOL. Configuración inicial; no repetir por cada venta."
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('tokenAcceso', '');",
+                  "pm.variables.set('tokenAcceso', '');"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "if (pm.response.code === 200) pm.collectionVariables.set('tokenAcceso', pm.response.json().accessToken);",
+                  "if (pm.response.code !== 200) pm.execution.setNextRequest(null);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "03 · Guardar empresa",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{urlBase}}/companies/{{ruc}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"taxpayerType\": \"LEGAL\",\n  \"legalName\": \"{{razonSocial}}\",\n  \"email\": \"{{correoEmpresa}}\",\n  \"address\": {\n    \"street\": \"Av. Arequipa 1234, oficina 402\",\n    \"geographicCode\": \"150122\",\n    \"department\": \"Lima\",\n    \"province\": \"Lima\",\n    \"district\": \"Miraflores\",\n    \"countryCode\": \"PE\"\n  },\n  \"taxCredentials\": {\n    \"user\": \"{{usuarioSol}}\",\n    \"password\": \"{{claveSol}}\"\n  },\n  \"digitalCertificate\": {\n    \"certificate\": \"{{certificadoBase64}}\",\n    \"password\": \"{{claveCertificado}}\"\n  },\n  \"tradeName\": \"{{nombreComercial}}\",\n  \"logoBase64\": \"{{logoBase64}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Guarda la empresa de la cuenta autenticada. Requiere dirección, RUC, SOL y PKCS12 coherentes. Se incluyó un certificado de pruebas autofirmado: valida el flujo local, pero no garantiza aceptación SUNAT; sustituir para un piloto real. Configuración inicial; no repetir por cada venta."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "if (pm.response.code !== 200) pm.execution.setNextRequest(null);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "04 · Verificar empresa antes de vender",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{urlBase}}/companies/{{ruc}}",
+            "description": "Debe responder 200 y mostrar documentNumber, id y accountId. Si responde 404, la empresa no existe en esta cuenta: revisar el resultado del paso 03. H2 en memoria se vacía al reiniciar."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Empresa disponible en la cuenta', () => pm.response.to.have.status(200));",
+                  "if (pm.response.code === 200) { const d = pm.response.json(); pm.test('RUC correcto', () => pm.expect(d.documentNumber).to.eql(pm.variables.get('ruc'))); pm.collectionVariables.set('idEmpresa',d.id); pm.collectionVariables.set('idCuenta',d.accountId); } else { pm.execution.setNextRequest(null); }",
+                  "pm.execution.setNextRequest(null);"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "description": "Ejecutar los cuatro pasos en orden antes de vender. Después de reiniciar H2 en memoria, repetirlos. Token guardado en la colección."
+    },
+    {
+      "name": "02 · Ventas directas",
+      "item": [
+        {
+          "name": "01 · Emitir boleta — minimarket · 80 mm",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Idempotency-Key",
+                "value": "{{idEjecucion}}-minimarket"
+              }
+            ],
+            "url": "{{urlBase}}/v2/companies/{{ruc}}/sales?format={{formatoTicket}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"document\": {\n    \"documentType\": \"03\",\n    \"series\": \"B001\",\n    \"issueDate\": \"{{fechaEmision}}\",\n    \"currency\": \"PEN\",\n    \"taxRegime\": \"GENERAL\",\n    \"customer\": {\n      \"documentType\": \"1\",\n      \"documentNumber\": \"12345678\",\n      \"name\": \"JUAN PEREZ\"\n    },\n    \"items\": [\n      {\n        \"productCode\": \"AB-001\",\n        \"description\": \"Arroz embolsado 5 kg\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"4\",\n        \"unitPrice\": \"24.90\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"AB-002\",\n        \"description\": \"Aceite vegetal 1 litro\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"6\",\n        \"unitPrice\": \"9.50\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"AB-003\",\n        \"description\": \"Azúcar embolsada 1 kg\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"10\",\n        \"unitPrice\": \"4.80\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"AB-004\",\n        \"description\": \"Fideos 500 g\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"12\",\n        \"unitPrice\": \"3.90\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"AB-005\",\n        \"description\": \"Atún en conserva\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"12\",\n        \"unitPrice\": \"6.50\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"AB-006\",\n        \"description\": \"Leche evaporada\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"24\",\n        \"unitPrice\": \"4.50\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"AB-007\",\n        \"description\": \"Café instantáneo\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"3\",\n        \"unitPrice\": \"18.90\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"AB-008\",\n        \"description\": \"Chocolate en polvo\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"4\",\n        \"unitPrice\": \"12.50\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"AB-009\",\n        \"description\": \"Galletas familiares\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"8\",\n        \"unitPrice\": \"7.90\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"AB-010\",\n        \"description\": \"Cereal en caja\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"6\",\n        \"unitPrice\": \"16.50\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"AB-011\",\n        \"description\": \"Mermelada\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"4\",\n        \"unitPrice\": \"9.90\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"AB-012\",\n        \"description\": \"Mayonesa\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"4\",\n        \"unitPrice\": \"11.90\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"AB-013\",\n        \"description\": \"Salsa de tomate\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"6\",\n        \"unitPrice\": \"5.50\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"AB-014\",\n        \"description\": \"Sal de mesa\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"6\",\n        \"unitPrice\": \"2.50\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"AB-015\",\n        \"description\": \"Agua mineral 2.5 litros\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"12\",\n        \"unitPrice\": \"5.00\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"AB-016\",\n        \"description\": \"Gaseosa 3 litros\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"12\",\n        \"unitPrice\": \"12.00\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"AB-017\",\n        \"description\": \"Jugo envasado\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"8\",\n        \"unitPrice\": \"8.50\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"AB-018\",\n        \"description\": \"Detergente 2 kg\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"4\",\n        \"unitPrice\": \"24.90\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"AB-019\",\n        \"description\": \"Lavavajilla\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"6\",\n        \"unitPrice\": \"7.90\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"AB-020\",\n        \"description\": \"Lejía 1 litro\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"6\",\n        \"unitPrice\": \"4.90\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"AB-021\",\n        \"description\": \"Papel higiénico paquete\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"6\",\n        \"unitPrice\": \"18.90\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"AB-022\",\n        \"description\": \"Papel toalla\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"6\",\n        \"unitPrice\": \"8.90\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"AB-023\",\n        \"description\": \"Jabón de tocador\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"12\",\n        \"unitPrice\": \"3.90\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"AB-024\",\n        \"description\": \"Champú\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"4\",\n        \"unitPrice\": \"17.90\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"AB-025\",\n        \"description\": \"Pasta dental\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"6\",\n        \"unitPrice\": \"9.90\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"AB-026\",\n        \"description\": \"Cepillo dental\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"6\",\n        \"unitPrice\": \"5.90\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"AB-027\",\n        \"description\": \"Servilletas paquete\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"8\",\n        \"unitPrice\": \"4.50\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"AB-028\",\n        \"description\": \"Bolsas de basura\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"6\",\n        \"unitPrice\": \"7.50\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"AB-029\",\n        \"description\": \"Esponja de cocina\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"8\",\n        \"unitPrice\": \"3.50\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"AB-030\",\n        \"description\": \"Desinfectante\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"4\",\n        \"unitPrice\": \"12.90\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"AB-031\",\n        \"description\": \"Alimento para mascotas\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"4\",\n        \"unitPrice\": \"29.90\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"AB-032\",\n        \"description\": \"Pilas paquete\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"4\",\n        \"unitPrice\": \"12.50\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"AB-033\",\n        \"description\": \"Vasos descartables paquete\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"6\",\n        \"unitPrice\": \"6.90\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"AB-034\",\n        \"description\": \"Platos descartables paquete\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"6\",\n        \"unitPrice\": \"7.90\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"AB-035\",\n        \"description\": \"Papel aluminio\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"3\",\n        \"unitPrice\": \"9.90\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      }\n    ],\n    \"paymentType\": \"Contado\",\n    \"operationType\": \"0101\",\n    \"externalReference\": \"{{idEjecucion}}-minimarket\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Venta directa, sin confirmación posterior. El cuerpo contiene los productos/servicios y pago. 200: PDF listo para guardar/imprimir. 202: demora, conserva ID y utiliza Recuperación. 409: revisar rechazo/conflicto. No ejecutar todas las ventas del catálogo: elegir una y conservar la clave para reintentar. Para otra venta vaciar idEjecucion."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('PDF o demora controlada', () => pm.expect([200,202]).to.include(pm.response.code));",
+                  "pm.collectionVariables.set('tipoComprobante', '03');",
+                  "pm.collectionVariables.set('serieNota', 'BC01');",
+                  "if (pm.response.code === 200) {",
+                  "  pm.test('Respuesta PDF', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/pdf'));",
+                  "  pm.collectionVariables.set('idVenta', pm.response.headers.get('X-Document-Id'));",
+                  "} else if (pm.response.code === 202) { const d = pm.response.json(); pm.collectionVariables.set('idVenta', d.documentId); console.warn(d.message); }",
+                  "pm.execution.setNextRequest(null);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "02 · Emitir boleta — pollería · 54 mm",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Idempotency-Key",
+                "value": "{{idEjecucion}}-polleria"
+              }
+            ],
+            "url": "{{urlBase}}/v2/companies/{{ruc}}/sales?format=TICKET_54",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"document\": {\n    \"documentType\": \"03\",\n    \"series\": \"B001\",\n    \"issueDate\": \"{{fechaEmision}}\",\n    \"currency\": \"PEN\",\n    \"taxRegime\": \"GENERAL\",\n    \"customer\": {\n      \"documentType\": \"1\",\n      \"documentNumber\": \"12345678\",\n      \"name\": \"JUAN PEREZ\"\n    },\n    \"items\": [\n      {\n        \"productCode\": \"POLLO-001\",\n        \"description\": \"Un pollo a la brasa con papas y ensalada\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"1\",\n        \"unitPrice\": \"65.00\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"BEB-001\",\n        \"description\": \"Gaseosa familiar\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"1\",\n        \"unitPrice\": \"8.00\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      }\n    ],\n    \"paymentType\": \"Contado\",\n    \"operationType\": \"0101\",\n    \"externalReference\": \"{{idEjecucion}}-polleria\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Venta directa, sin confirmación posterior. El cuerpo contiene los productos/servicios y pago. 200: PDF listo para guardar/imprimir. 202: demora, conserva ID y utiliza Recuperación. 409: revisar rechazo/conflicto. No ejecutar todas las ventas del catálogo: elegir una y conservar la clave para reintentar. Para otra venta vaciar idEjecucion."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('PDF o demora controlada', () => pm.expect([200,202]).to.include(pm.response.code));",
+                  "pm.collectionVariables.set('tipoComprobante', '03');",
+                  "pm.collectionVariables.set('serieNota', 'BC01');",
+                  "if (pm.response.code === 200) {",
+                  "  pm.test('Respuesta PDF', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/pdf'));",
+                  "  pm.collectionVariables.set('idVenta', pm.response.headers.get('X-Document-Id'));",
+                  "} else if (pm.response.code === 202) { const d = pm.response.json(); pm.collectionVariables.set('idVenta', d.documentId); console.warn(d.message); }",
+                  "pm.execution.setNextRequest(null);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "03 · Emitir factura al crédito — clínica dental",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Idempotency-Key",
+                "value": "{{idEjecucion}}-dental"
+              }
+            ],
+            "url": "{{urlBase}}/v2/companies/{{ruc}}/sales?format={{formatoTicket}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"document\": {\n    \"documentType\": \"01\",\n    \"series\": \"F001\",\n    \"issueDate\": \"{{fechaEmision}}\",\n    \"currency\": \"PEN\",\n    \"taxRegime\": \"GENERAL\",\n    \"customer\": {\n      \"documentType\": \"6\",\n      \"documentNumber\": \"{{rucCliente}}\",\n      \"name\": \"EMPRESA CLIENTESTRACION\"\n    },\n    \"items\": [\n      {\n        \"productCode\": \"DEN-001\",\n        \"description\": \"Evaluación odontológica\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"1\",\n        \"unitPrice\": \"100.00\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"DEN-002\",\n        \"description\": \"Tratamiento odontológico\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"1\",\n        \"unitPrice\": \"800.00\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"DEN-003\",\n        \"description\": \"Control del tratamiento\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"1\",\n        \"unitPrice\": \"100.00\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      }\n    ],\n    \"paymentType\": \"Credito\",\n    \"operationType\": \"0101\",\n    \"externalReference\": \"{{idEjecucion}}-dental\",\n    \"pendingAmount\": \"800.00\",\n    \"installments\": [\n      {\n        \"amount\": \"400.00\",\n        \"dueDate\": \"{{fechaVencimiento}}\"\n      },\n      {\n        \"amount\": \"400.00\",\n        \"dueDate\": \"{{fechaVencimientoCorregida}}\"\n      }\n    ]\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Venta directa, sin confirmación posterior. El cuerpo contiene los productos/servicios y pago. 200: PDF listo para guardar/imprimir. 202: demora, conserva ID y utiliza Recuperación. 409: revisar rechazo/conflicto. No ejecutar todas las ventas del catálogo: elegir una y conservar la clave para reintentar. Para otra venta vaciar idEjecucion."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('PDF o demora controlada', () => pm.expect([200,202]).to.include(pm.response.code));",
+                  "pm.collectionVariables.set('tipoComprobante', '01');",
+                  "pm.collectionVariables.set('serieNota', 'FC01');",
+                  "if (pm.response.code === 200) {",
+                  "  pm.test('Respuesta PDF', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/pdf'));",
+                  "  pm.collectionVariables.set('idVenta', pm.response.headers.get('X-Document-Id'));",
+                  "} else if (pm.response.code === 202) { const d = pm.response.json(); pm.collectionVariables.set('idVenta', d.documentId); console.warn(d.message); }",
+                  "if ([200,202].includes(pm.response.code)) pm.collectionVariables.set('idVentaCredito', pm.collectionVariables.get('idVenta'));",
+                  "pm.execution.setNextRequest(null);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "04 · Emitir factura — ferretería",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Idempotency-Key",
+                "value": "{{idEjecucion}}-ferreteria"
+              }
+            ],
+            "url": "{{urlBase}}/v2/companies/{{ruc}}/sales?format={{formatoTicket}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"document\": {\n    \"documentType\": \"01\",\n    \"series\": \"F001\",\n    \"issueDate\": \"{{fechaEmision}}\",\n    \"currency\": \"PEN\",\n    \"taxRegime\": \"GENERAL\",\n    \"customer\": {\n      \"documentType\": \"6\",\n      \"documentNumber\": \"{{rucCliente}}\",\n      \"name\": \"EMPRESA CLIENTESTRACION\"\n    },\n    \"items\": [\n      {\n        \"productCode\": \"FER-001\",\n        \"description\": \"Cemento bolsa\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"10\",\n        \"unitPrice\": \"31.50\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"FER-002\",\n        \"description\": \"Pintura látex galón\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"8\",\n        \"unitPrice\": \"69.90\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"FER-003\",\n        \"description\": \"Rodillo para pintar\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"6\",\n        \"unitPrice\": \"18.50\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"FER-004\",\n        \"description\": \"Brocha de tres pulgadas\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"8\",\n        \"unitPrice\": \"12.90\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"FER-005\",\n        \"description\": \"Tubo PVC\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"12\",\n        \"unitPrice\": \"16.90\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"FER-006\",\n        \"description\": \"Codo PVC\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"24\",\n        \"unitPrice\": \"3.50\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"FER-007\",\n        \"description\": \"Cinta teflón\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"12\",\n        \"unitPrice\": \"2.50\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"FER-008\",\n        \"description\": \"Cable eléctrico rollo\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"2\",\n        \"unitPrice\": \"180.00\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"FER-009\",\n        \"description\": \"Tomacorriente\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"12\",\n        \"unitPrice\": \"8.90\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"FER-010\",\n        \"description\": \"Interruptor\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"12\",\n        \"unitPrice\": \"7.90\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"FER-011\",\n        \"description\": \"Foco LED\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"12\",\n        \"unitPrice\": \"12.90\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"FER-012\",\n        \"description\": \"Tornillos caja\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"6\",\n        \"unitPrice\": \"19.90\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"FER-013\",\n        \"description\": \"Clavos caja\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"6\",\n        \"unitPrice\": \"14.50\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"FER-014\",\n        \"description\": \"Martillo\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"3\",\n        \"unitPrice\": \"29.90\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"FER-015\",\n        \"description\": \"Alicate\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"3\",\n        \"unitPrice\": \"24.90\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"FER-016\",\n        \"description\": \"Destornillador\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"6\",\n        \"unitPrice\": \"12.90\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"FER-017\",\n        \"description\": \"Guantes de trabajo\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"10\",\n        \"unitPrice\": \"8.50\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"FER-018\",\n        \"description\": \"Lentes de protección\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"10\",\n        \"unitPrice\": \"12.90\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      }\n    ],\n    \"paymentType\": \"Contado\",\n    \"operationType\": \"0101\",\n    \"externalReference\": \"{{idEjecucion}}-ferreteria\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Venta directa, sin confirmación posterior. El cuerpo contiene los productos/servicios y pago. 200: PDF listo para guardar/imprimir. 202: demora, conserva ID y utiliza Recuperación. 409: revisar rechazo/conflicto. No ejecutar todas las ventas del catálogo: elegir una y conservar la clave para reintentar. Para otra venta vaciar idEjecucion."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('PDF o demora controlada', () => pm.expect([200,202]).to.include(pm.response.code));",
+                  "pm.collectionVariables.set('tipoComprobante', '01');",
+                  "pm.collectionVariables.set('serieNota', 'FC01');",
+                  "if (pm.response.code === 200) {",
+                  "  pm.test('Respuesta PDF', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/pdf'));",
+                  "  pm.collectionVariables.set('idVenta', pm.response.headers.get('X-Document-Id'));",
+                  "} else if (pm.response.code === 202) { const d = pm.response.json(); pm.collectionVariables.set('idVenta', d.documentId); console.warn(d.message); }",
+                  "pm.execution.setNextRequest(null);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "05 · Emitir boleta — sucursal",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Idempotency-Key",
+                "value": "{{idEjecucion}}-sucursal"
+              }
+            ],
+            "url": "{{urlBase}}/v2/companies/{{ruc}}/sales?format={{formatoTicket}}",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"document\": {\n    \"documentType\": \"03\",\n    \"series\": \"B001\",\n    \"issueDate\": \"{{fechaEmision}}\",\n    \"currency\": \"PEN\",\n    \"taxRegime\": \"GENERAL\",\n    \"customer\": {\n      \"documentType\": \"1\",\n      \"documentNumber\": \"12345678\",\n      \"name\": \"JUAN PEREZ\"\n    },\n    \"items\": [\n      {\n        \"productCode\": \"SUC-001\",\n        \"description\": \"Canasta de abarrotes\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"2\",\n        \"unitPrice\": \"85.00\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      },\n      {\n        \"productCode\": \"SUC-002\",\n        \"description\": \"Paquete de artículos de limpieza\",\n        \"unitCode\": \"NIU\",\n        \"quantity\": \"1\",\n        \"unitPrice\": \"59.90\",\n        \"taxAffectationCode\": \"10\",\n        \"discountAmount\": \"0.00\"\n      }\n    ],\n    \"paymentType\": \"Contado\",\n    \"operationType\": \"0101\",\n    \"externalReference\": \"{{idEjecucion}}-sucursal\",\n    \"establishment\": {\n      \"code\": \"0001\",\n      \"name\": \"Sucursal principal\",\n      \"address\": {\n        \"street\": \"Av. Arequipa 1234, oficina 402\",\n        \"geographicCode\": \"150122\",\n        \"department\": \"Lima\",\n        \"province\": \"Lima\",\n        \"district\": \"Miraflores\",\n        \"countryCode\": \"PE\"\n      }\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Venta directa, sin confirmación posterior. El cuerpo contiene los productos/servicios y pago. 200: PDF listo para guardar/imprimir. 202: demora, conserva ID y utiliza Recuperación. 409: revisar rechazo/conflicto. No ejecutar todas las ventas del catálogo: elegir una y conservar la clave para reintentar. Para otra venta vaciar idEjecucion."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('PDF o demora controlada', () => pm.expect([200,202]).to.include(pm.response.code));",
+                  "pm.collectionVariables.set('tipoComprobante', '03');",
+                  "pm.collectionVariables.set('serieNota', 'BC01');",
+                  "if (pm.response.code === 200) {",
+                  "  pm.test('Respuesta PDF', () => pm.expect(pm.response.headers.get('Content-Type')).to.include('application/pdf'));",
+                  "  pm.collectionVariables.set('idVenta', pm.response.headers.get('X-Document-Id'));",
+                  "} else if (pm.response.code === 202) { const d = pm.response.json(); pm.collectionVariables.set('idVenta', d.documentId); console.warn(d.message); }",
+                  "pm.execution.setNextRequest(null);"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "description": "Elegir un ejemplo; una llamada devuelve el PDF o informa demora."
+    },
+    {
+      "name": "03 · Consultas y paginación",
+      "item": [
+        {
+          "name": "00 · Listar empresas de mi cuenta",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{urlBase}}/companies?page={{pagina}}&perPage={{porPagina}}",
+            "description": "Muestra solo empresas del token actual, ahora con documentNumber (RUC). Si data está vacío, registrar empresa en Configuración inicial."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "01 · Listar boletas con paginación",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{urlBase}}/companies/{{ruc}}/documents?documentType=03&page={{pagina}}&perPage={{porPagina}}",
+            "description": "Lista boletas de la cuenta/empresa. Cambiar pagina y porPagina; respuesta data y pagination."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Paginación', () => pm.expect(pm.response.json().pagination.page).to.eql(Number(pm.variables.get('pagina'))));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "02 · Listar facturas con paginación",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{urlBase}}/companies/{{ruc}}/documents?documentType=01&page={{pagina}}&perPage={{porPagina}}",
+            "description": "Lista facturas; permite añadir filtros from, to, series, number y status."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "03 · Consultar venta sin esperar a SUNAT",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{urlBase}}/v2/companies/{{ruc}}/sales/{{idVenta}}",
+            "description": "Estado local persistido; no vuelve a emitir ni consulta externamente."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "04 · Consultar respuesta fiscal de la venta",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{urlBase}}/companies/{{ruc}}/documents/{{idVenta}}",
+            "description": "Consulta la respuesta SUNAT según el tipo de documento. No crea otra venta."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "description": "Búsquedas y estados, sin emitir nuevos documentos."
+    },
+    {
+      "name": "04 · Reimpresión y consulta del cliente",
+      "item": [
+        {
+          "name": "01 · Reimprimir comprobante · 80 mm",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{urlBase}}/companies/{{ruc}}/documents/{{idVenta}}/receipt?format=TICKET_80",
+            "description": "Mismo ID y correlativo. Solo genera representación PDF, no envía ni vuelve a cobrar."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "02 · Reimprimir comprobante · 54 mm",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{urlBase}}/companies/{{ruc}}/documents/{{idVenta}}/receipt?format=TICKET_54",
+            "description": "Mismo comprobante adaptado a papel de 54 mm."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "03 · Obtener enlace de consulta del comprobante",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{urlBase}}/companies/{{ruc}}/documents/{{idVenta}}/publication",
+            "description": "Devuelve path público relativo y clave no predecible; PUBLIC_BASE_URL configura el dominio impreso."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "pm.collectionVariables.set('rutaConsulta', pm.response.json().path);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "04 · Abrir página de consulta",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{urlBase}}{{rutaConsulta}}",
+            "description": "Página HTML real con identidad, estado y descarga PDF/XML/CDR. No exige token: requiere la clave específica del comprobante.",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "05 · Consultar datos y resultado fiscal en JSON",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "noauth"
+            },
+            "url": "{{urlBase}}{{rutaConsulta}}/status",
+            "description": "GET público con la clave específica del comprobante. Devuelve RUC, serie, número, total, estado, código SUNAT y disponibilidad de CDR. No devuelve datos de la cuenta ni inventa una aceptación."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "pm.test('Comprobante identificado', () => pm.expect(pm.response.json().documentNumber).to.eql(pm.variables.get('ruc')));"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "description": "Descargar el mismo comprobante y abrir su página de consulta."
+    },
+    {
+      "name": "05 · Recuperación de fallos o demoras",
+      "item": [
+        {
+          "name": "01 · Recuperar venta demorada y obtener PDF",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{urlBase}}/v2/companies/{{ruc}}/sales/{{idVenta}}/recover?format={{formatoTicket}}",
+            "description": "Solo después de una demora/falla. Reutiliza la misma venta; 200 PDF, 202 todavía procesándose, 409 requiere revisar. No es confirmación de venta."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('PDF o demora controlada', () => pm.expect([200,202]).to.include(pm.response.code));",
+                  "if (pm.response.code === 202) console.warn(pm.response.json().message);",
+                  "pm.execution.setNextRequest(null);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "02 · Reanudar conciliación tras resolver revisión manual",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{urlBase}}/companies/{{ruc}}/documents/{{idVenta}}/reconciliation/resume",
+            "description": "Usar únicamente después de corregir la causa de revisión manual. No cambia el contenido ni duplica el comprobante."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "description": "Excepciones del proceso, fuera del flujo normal de venta."
+    },
+    {
+      "name": "06 · Anulaciones — notas de crédito",
+      "item": [
+        {
+          "name": "01 · Anular operación mediante nota de crédito",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Idempotency-Key",
+                "value": "{{idAnulacion}}-anulacion"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{urlBase}}/companies/{{ruc}}/documents/{{idVenta}}/credit-notes",
+            "description": "Para una venta otorgada por V2 corresponde evaluar la nota de crédito, no declarar falsamente que no se entregó. Motivo 01: anulación de operación. Requiere aceptación y condiciones fiscales del comprobante original.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reasonCode\": \"01\",\n  \"reason\": \"Anulación de la operación\",\n  \"series\": \"{{serieNota}}\",\n  \"issueDate\": \"{{fechaEmision}}\",\n  \"externalReference\": \"{{idAnulacion}}-anulacion\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!pm.collectionVariables.get('idAnulacion')) pm.collectionVariables.set('idAnulacion', pm.variables.replaceIn('{{$guid}}'));",
+                  "pm.collectionVariables.set('serieNota', pm.collectionVariables.get('tipoComprobante') === '01' ? 'FC01' : 'BC01');"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 202', () => pm.response.to.have.status(202));",
+                  "if (pm.response.code === 202) pm.collectionVariables.set('idNota', pm.response.json().documentId);",
+                  "pm.execution.setNextRequest(null);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "02 · Consultar nota de crédito",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{urlBase}}/companies/{{ruc}}/documents/{{idNota}}",
+            "description": "Consulta aceptación o rechazo de la nota; no emite otra."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "03 · Descargar nota de crédito · ticket",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{urlBase}}/companies/{{ruc}}/documents/{{idNota}}/receipt?format={{formatoTicket}}",
+            "description": "Representación de la nota existente. Confirmar su resultado fiscal antes de dar la anulación por terminada."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "description": "Corrección de operaciones ya otorgadas."
+    },
+    {
+      "name": "07 · Ventas al crédito y abonos",
+      "item": [
+        {
+          "name": "01 · Consultar saldo y abonos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{urlBase}}/companies/{{ruc}}/documents/{{idVentaCredito}}/payments",
+            "description": "Usar el ID de una venta al crédito. Consulta saldo, pagos y reversiones."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "02 · Registrar abono de S/400",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Idempotency-Key",
+                "value": "{{idAbono}}-abono"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{urlBase}}/companies/{{ruc}}/documents/{{idVentaCredito}}/payments",
+            "description": "Abono del ejemplo de factura al crédito. Conservar idAbono para reintentar; vaciarlo para otro pago.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": \"400.00\",\n  \"currency\": \"PEN\",\n  \"paidOn\": \"{{fechaEmision}}\",\n  \"reference\": \"Abono de cuota\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!pm.collectionVariables.get('idAbono')) pm.collectionVariables.set('idAbono', pm.variables.replaceIn('{{$guid}}'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));",
+                  "if (pm.response.code === 200) pm.collectionVariables.set('idPago', pm.response.json().id);",
+                  "pm.execution.setNextRequest(null);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "03 · Revertir abono registrado por error",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{urlBase}}/companies/{{ruc}}/documents/{{idVentaCredito}}/payments/{{idPago}}/reverse",
+            "description": "Revierte el pago seleccionado, sin crear otra venta ni eliminar el historial.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Pago registrado por error\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "description": "Consultar saldo, registrar pago y revertir pago."
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Electronic Invoicing - Development" type="Application" factoryName="Application">
+    <envs>
+      <env name="SPRING_PROFILES_ACTIVE" value="development" />
+      <env name="PORT" value="8080" />
+      <env name="SESSION_EXPIRING" value="false" />
+      <env name="JWT_SECRET" value="DevOnly-3hV8M9p3Xw7aFr6Tt1cSk4dK2nJ5qP8vW6rY0uZ9bL7cE4fA1mG2xN5sH8" />
+    </envs>
+    <option name="MAIN_CLASS_NAME" value="pe.invoicing.app.Application" />
+    <module name="electronic-invoicing-server" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

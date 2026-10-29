@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:invoicing;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ''
+  jpa:
+    hibernate:
+      ddl-auto: create
+app:
+  tax:
+    emission-endpoint: https://e-beta.sunat.gob.pe/ol-ti-itcpfegem-beta/billService
+    consultation-endpoint: https://e-beta.sunat.gob.pe/ol-ti-itcpfegem-beta/billService
+  security:
+    secret: ${SECURITY_SECRET:XMRRWmxpnRb827J9b5Eo2kG9hcO0MFQN}
